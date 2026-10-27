@@ -1,8 +1,8 @@
-name: Collect Binance Futures Market Data
+name: Collect OKX Futures Market Data
 on:
   workflow_dispatch:
   schedule:
-    - cron: '22 * * * *' # UTC; every hour at minute 22 = Beijing xx:22
+    - cron: '17 * * * *' # UTC; every hour at minute 17 = Beijing xx:17
 permissions:
   contents: write
 concurrency:
