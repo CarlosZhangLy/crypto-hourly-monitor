@@ -1,0 +1,46 @@
+
+name: Test Crypto Market APIs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check API connectivity
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import urllib.request
+          import urllib.error
+          import json
+
+          urls = {
+              "Binance Futures":
+                  "https://fapi.binance.com/fapi/v1/klines?symbol=BTCUSDT&interval=15m&limit=2",
+              "OKX Perpetual":
+                  "https://www.okx.com/api/v5/market/candles?instId=BTC-USDT-SWAP&bar=15m&limit=2",
+              "Bybit Perpetual":
+                  "https://api.bybit.com/v5/market/kline?category=linear&symbol=BTCUSDT&interval=15&limit=2"
+          }
+
+          for name, url in urls.items():
+              print(f"\nTesting {name}", flush=True)
+              try:
+                  req = urllib.request.Request(
+                      url, headers={"User-Agent": "MarketMonitor/1.0"})
+                  with urllib.request.urlopen(req, timeout=12) as r:
+                      data = json.load(r)
+                      valid = (
+                          isinstance(data, list) and len(data) > 0
+                          if name == "Binance Futures"
+                          else data.get("code") in ("0", 0)
+                          if name == "OKX Perpetual"
+                          else data.get("retCode") == 0
+                      )
+                      print(f"HTTP: {r.status}")
+                      print(f"Valid response: {valid}")
+              except Exception as e:
+                  print(f"FAILED: {type(e).__name__}: {e}")
+          PY
