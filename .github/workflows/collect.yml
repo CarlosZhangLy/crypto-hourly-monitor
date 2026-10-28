@@ -28,3 +28,9 @@ jobs:
             git commit -m 'Update market snapshot'
             git push
           fi
+
+      - name: Send PushPlus WeChat summary
+        continue-on-error: true
+        env:
+          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+        run: python pushplus_notify.py
