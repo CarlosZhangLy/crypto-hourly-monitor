@@ -2,7 +2,7 @@ name: Collect OKX Futures Market Data
 on:
   workflow_dispatch:
   schedule:
-    - cron: '19 * * * *' # UTC; every hour at minute 19 = Beijing xx:19
+    - cron: '4,19,34,49 * * * *' # UTC, optional backup; external cron-job.org is primary
 permissions:
   contents: write
 concurrency:
@@ -33,4 +33,28 @@ jobs:
         continue-on-error: true
         env:
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
-        run: python pushplus_notify.py
+        run: |
+          python - <<'PY'
+          from datetime import datetime, timedelta, timezone
+          import subprocess
+          bj = datetime.now(timezone(timedelta(hours=8)))
+          if bj.minute == 19:
+              subprocess.run(["python", "pushplus_notify.py"], check=True)
+          else:
+              print("Quarter-hour signal run; skip full hourly summary")
+          PY
+
+      - name: Notify important 5-minute signal changes
+        continue-on-error: true
+        env:
+          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
+        run: python signal_notify.py
+
+      - name: Persist alert state
+        if: always()
+        run: |
+          git add data/signal_state.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update 15m signal notification state'
+            git push
+          fi
