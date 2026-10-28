@@ -5,6 +5,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.parse import urlencode
+from five_minute import analyze as analyze_five_minute
 
 BASE = 'https://www.okx.com'
 SYMBOLS = ['BTC','ETH','SOL','XRP','LTC','ADA','BCH','LINK']
@@ -74,7 +75,7 @@ def candles(inst, period, now_ms):
         stamp=int(k[0]); confirm=str(k[8])
         if confirm!='1' or stamp>now_ms: continue
         valid.append({'time':datetime.fromtimestamp(stamp/1000,TZ).isoformat(timespec='seconds'),
-           'high':float(k[2]),'low':float(k[3]),'close':float(k[4]),'quote_volume':float(k[7]),'stamp':stamp})
+           'open':float(k[1]),'high':float(k[2]),'low':float(k[3]),'close':float(k[4]),'quote_volume':float(k[7]),'stamp':stamp})
     valid.sort(key=lambda x:x['stamp'])
     if len(valid)<60: raise ValueError(f'Only {len(valid)} confirmed candles for {inst} {period}')
     if len(set(x['stamp'] for x in valid))!=len(valid): raise ValueError('Duplicate candles')
@@ -100,6 +101,9 @@ def main():
                 try:
                     b=candles(inst,period,now_ms)
                     out['intervals'][period]=calculate(b)
+                    if period=='5m':
+                        out['five_minute_structure']=analyze_five_minute(b)
+                        out['five_minute_candles']=[{key:c[key] for key in ('time','open','high','low','close','quote_volume')} for c in b[-60:]]
                     print(f'{inst} {period} OK: {len(b)} closed candles',flush=True)
                 except Exception as e:
                     snapshot['errors'][f'{inst} {period}']=str(e)
