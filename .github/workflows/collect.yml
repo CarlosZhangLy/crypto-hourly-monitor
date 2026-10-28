@@ -38,7 +38,7 @@ jobs:
           from datetime import datetime, timedelta, timezone
           import subprocess
           bj = datetime.now(timezone(timedelta(hours=8)))
-          if bj.minute == 19:
+          if 19 <= bj.minute <= 24:
               subprocess.run(["python", "pushplus_notify.py"], check=True)
           else:
               print("Quarter-hour signal run; skip full hourly summary")
