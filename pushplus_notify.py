@@ -79,6 +79,33 @@ def evaluate(sym, x):
                 flags=flags, support=recent_support, resistance=recent_resistance,
                 atr_pct=atr_pct, hint=m15["structure_hint"])
 
+def digest_status(snapshot):
+    ranked = []
+    for sym in CORE:
+        x = snapshot["symbols"][sym + "USDT"]
+        r = evaluate(sym, x)
+        q = x.get("five_minute_structure", {})
+        p = x["intervals"]
+        if q.get("confirmed") and q.get("bars_since_break", 100) <= 3:
+            side = q.get("side")
+            aligned = (side == "long" and p["15m"]["ema20"] > p["15m"]["ema50"] and p["1h"]["ema20"] > p["1h"]["ema50"]) or (side == "short" and p["15m"]["ema20"] < p["15m"]["ema50"] and p["1h"]["ema20"] < p["1h"]["ema50"])
+            if aligned and p["15m"]["volume_ratio_vs_prior20"] >= 1.2:
+                ranked.append((3, sym, "5m回踩初步确认，需即时复核价格和风险"))
+        if r["quality"] == "重点观察":
+            ranked.append((2, sym, "多因素共振，等待5m确认"))
+        elif r["quality"] == "一般观察":
+            ranked.append((1, sym, "有初步线索，条件尚不完整"))
+    ranked.sort(reverse=True)
+    unique = []
+    for priority, sym, explanation in ranked:
+        if sym not in [z[0] for z in unique]:
+            unique.append((sym, explanation, priority))
+    if unique:
+        top = unique[0]
+        heading = "结构确认待复核" if top[2] == 3 else "重点观察" if top[2] == 2 else "有机会线索"
+        return heading + "：" + "、".join(v[0] for v in unique[:2]), unique[:2]
+    return "暂无合格机会", []
+
 def build(snapshot, stamp):
     records = [evaluate(s, snapshot["symbols"][s+"USDT"]) for s in CORE]
     out = ["## OKX多指标综合监测 %s" % stamp.strftime("%m-%d %H:%M"),
@@ -116,7 +143,8 @@ def build(snapshot, stamp):
             out.append("  已满足程序定义的触及回踩区、局部HL/LH确认及重返结构位；仍需15m趋势、量能及扣费后盈亏比验证，不是实时买卖指令。")
     if not found:
         out.append("最近5分钟K线没有形成符合程序定义的突破回踩观察线索。")
-    out += ["", "**交易结论：暂不交易，不挂单。** 需更新K线核验突破、回踩形成HL/LH、重新放量及合理止损后才能制定方案。",
+    status, top = digest_status(snapshot)
+    out += ["", "**本期机会状态：" + status + "。**", "本报告是历史快照规则筛选，观察/初步确认均不代表现在可挂单；需要最新报价、结构有效性和扣费后盈亏比复核。",
             "布林外扩不是视觉20°；结构标签仅为程序提示。ATR用于过滤异常波动，不能保证风险。",
             "本金参考100U；单笔预估损失≤1U，同时总风险≤2U（含手续费及滑点）；不自动交易。",
             "[GitHub行情数据](https://github.com/CarlosZhangly/crypto-hourly-monitor/blob/main/data/latest.md)"]
@@ -128,7 +156,8 @@ def main():
         raise ValueError("Missing PUSHPLUS_TOKEN secret")
     snapshot = json.loads(Path("data/latest.json").read_text(encoding="utf-8"))
     stamp = check(snapshot)
-    body = {"token": token, "title": "OKX综合监测 %s｜暂不交易" % stamp.strftime("%H:%M"),
+    status, _ = digest_status(snapshot)
+    body = {"token": token, "title": "OKX综合监测 %s｜%s" % (stamp.strftime("%H:%M"), status),
             "content": build(snapshot, stamp), "template": "markdown", "channel": "wechat"}
     req = Request("https://www.pushplus.plus/send",
                   data=json.dumps(body, ensure_ascii=False).encode("utf-8"),
