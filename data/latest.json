@@ -1,8 +1,8 @@
 {
   "source": "OKX USDT-margined perpetual SWAP market REST API",
   "source_url": "https://www.okx.com",
-  "generated_utc": "2026-10-28T19:34:16+00:00",
-  "generated_beijing": "2026-10-29T03:34:16+08:00",
+  "generated_utc": "2026-10-28T19:49:14+00:00",
+  "generated_beijing": "2026-10-29T03:49:14+08:00",
   "intervals": [
     "5m",
     "15m",
@@ -16,21 +16,21 @@
       "priority": "core",
       "intervals": {
         "5m": {
-          "bar_time_bj": "2026-10-29T03:25:00+08:00",
-          "closed_candle_close": 81170.2,
-          "ema20": 80983.1260284857,
-          "ema50": 80835.9846163277,
-          "atr14": 213.9214285714,
-          "bb20_upper": 81273.6974049878,
-          "bb20_middle": 80977.65,
-          "bb20_lower": 80681.6025950122,
-          "bb_width_pct": 0.7312,
-          "bb_upper_change_pct_of_price_per_bar": 0.025318,
-          "bb_lower_change_pct_of_price_per_bar": 0.024183,
+          "bar_time_bj": "2026-10-29T03:40:00+08:00",
+          "closed_candle_close": 81294.0,
+          "ema20": 81057.1669870842,
+          "ema50": 80886.2987793326,
+          "atr14": 194.0071428571,
+          "bb20_upper": 81376.918538589,
+          "bb20_middle": 81039.805,
+          "bb20_lower": 80702.691461411,
+          "bb_width_pct": 0.832,
+          "bb_upper_change_pct_of_price_per_bar": 0.044281,
+          "bb_lower_change_pct_of_price_per_bar": 0.002795,
           "bb_expanding": false,
           "bb_uptrend_expansion": true,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.166,
+          "volume_ratio_vs_prior20": 0.475,
           "last_pivots": [
             {
               "type": "L",
@@ -93,7 +93,7 @@
               "time": "2026-10-29T03:00:00+08:00"
             }
           ],
-          "recent_swing_high": 81299.0,
+          "recent_swing_high": 81326.2,
           "recent_swing_low": 80646.2,
           "close_above_prior20_high": false,
           "close_below_prior20_low": false,
@@ -125,21 +125,21 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         },
         "15m": {
-          "bar_time_bj": "2026-10-29T03:15:00+08:00",
-          "closed_candle_close": 81170.2,
-          "ema20": 80837.1227817045,
-          "ema50": 80860.8959485853,
-          "atr14": 257.45,
-          "bb20_upper": 81170.9002934654,
-          "bb20_middle": 80710.88,
-          "bb20_lower": 80250.8597065346,
-          "bb_width_pct": 1.1399,
-          "bb_upper_change_pct_of_price_per_bar": 0.095107,
-          "bb_lower_change_pct_of_price_per_bar": -0.014905,
+          "bar_time_bj": "2026-10-29T03:30:00+08:00",
+          "closed_candle_close": 81294.0,
+          "ema20": 80880.6379829659,
+          "ema50": 80879.0617102407,
+          "atr14": 261.75,
+          "bb20_upper": 81265.812880593,
+          "bb20_middle": 80749.39,
+          "bb20_lower": 80232.967119407,
+          "bb_width_pct": 1.2791,
+          "bb_upper_change_pct_of_price_per_bar": 0.116752,
+          "bb_lower_change_pct_of_price_per_bar": -0.02201,
           "bb_expanding": true,
           "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.754,
+          "volume_ratio_vs_prior20": 1.39,
           "last_pivots": [
             {
               "type": "H",
@@ -561,45 +561,30 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         }
       },
-      "last_price": 81278.9,
-      "price_change_pct_24h": 0.8055,
+      "last_price": 81360.0,
+      "price_change_pct_24h": 0.8044,
       "high_24h": 81786.9,
       "low_24h": 80350.0,
-      "turnover_usdt_24h_approx": 5303512004.55,
-      "ticker_time_bj": "2026-10-29T03:34:15+08:00",
+      "turnover_usdt_24h_approx": 5362311272.33,
+      "ticker_time_bj": "2026-10-29T03:49:13+08:00",
       "five_minute_structure": {
-        "status": "no_recent_break",
+        "status": "break_watch",
         "confirmed": false,
-        "atr14": 213.9214285714,
-        "latest_closed_bar": "2026-10-29T03:25:00+08:00",
-        "last_pivot_high": 81194.4,
-        "last_pivot_low": 80873.5
+        "atr14": 194.0071428571,
+        "latest_closed_bar": "2026-10-29T03:40:00+08:00",
+        "last_pivot_high": 81326.2,
+        "last_pivot_low": 80873.5,
+        "side": "long",
+        "break_bar": "2026-10-29T03:30:00+08:00",
+        "break_level": 81194.4,
+        "bars_since_break": 2,
+        "retest_touched": true,
+        "retest_pivot_confirmed": false,
+        "structure_hl_lh": false,
+        "regained_level": true,
+        "structure_label": "rule_confirmed_break_and_retest_not_BOS_CHoCH"
       },
       "five_minute_candles": [
-        {
-          "time": "2026-10-28T22:30:00+08:00",
-          "open": 80519.2,
-          "high": 80588.0,
-          "low": 80485.0,
-          "close": 80496.7,
-          "quote_volume": 12014021.98842
-        },
-        {
-          "time": "2026-10-28T22:35:00+08:00",
-          "open": 80496.7,
-          "high": 80515.6,
-          "low": 80420.0,
-          "close": 80502.3,
-          "quote_volume": 18790343.81833
-        },
-        {
-          "time": "2026-10-28T22:40:00+08:00",
-          "open": 80502.3,
-          "high": 80575.4,
-          "low": 80495.3,
-          "close": 80523.8,
-          "quote_volume": 8509607.84897
-        },
         {
           "time": "2026-10-28T22:45:00+08:00",
           "open": 80523.8,
@@ -1055,6 +1040,30 @@
           "low": 81088.0,
           "close": 81170.2,
           "quote_volume": 7909484.48836
+        },
+        {
+          "time": "2026-10-29T03:30:00+08:00",
+          "open": 81170.2,
+          "high": 81326.2,
+          "low": 81150.9,
+          "close": 81295.2,
+          "quote_volume": 51302501.37742
+        },
+        {
+          "time": "2026-10-29T03:35:00+08:00",
+          "open": 81295.2,
+          "high": 81299.8,
+          "low": 81189.4,
+          "close": 81216.4,
+          "quote_volume": 27707844.99219
+        },
+        {
+          "time": "2026-10-29T03:40:00+08:00",
+          "open": 81216.4,
+          "high": 81315.2,
+          "low": 81202.3,
+          "close": 81294.0,
+          "quote_volume": 22237631.35099
         }
       ]
     },
@@ -1063,21 +1072,21 @@
       "priority": "core",
       "intervals": {
         "5m": {
-          "bar_time_bj": "2026-10-29T03:25:00+08:00",
-          "closed_candle_close": 2357.74,
-          "ema20": 2351.659618973,
-          "ema50": 2345.2513965972,
-          "atr14": 8.1828571429,
-          "bb20_upper": 2364.0719648544,
-          "bb20_middle": 2351.4495,
-          "bb20_lower": 2338.8270351456,
-          "bb_width_pct": 1.0736,
-          "bb_upper_change_pct_of_price_per_bar": 0.026318,
-          "bb_lower_change_pct_of_price_per_bar": 0.033061,
+          "bar_time_bj": "2026-10-29T03:40:00+08:00",
+          "closed_candle_close": 2363.19,
+          "ema20": 2354.2277404508,
+          "ema50": 2347.1536106905,
+          "atr14": 7.6357142857,
+          "bb20_upper": 2367.1593581561,
+          "bb20_middle": 2353.8455,
+          "bb20_lower": 2340.5316418439,
+          "bb_width_pct": 1.1312,
+          "bb_upper_change_pct_of_price_per_bar": 0.052282,
+          "bb_lower_change_pct_of_price_per_bar": 0.014408,
           "bb_expanding": false,
           "bb_uptrend_expansion": true,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.124,
+          "volume_ratio_vs_prior20": 0.194,
           "last_pivots": [
             {
               "type": "L",
@@ -1172,21 +1181,21 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         },
         "15m": {
-          "bar_time_bj": "2026-10-29T03:15:00+08:00",
-          "closed_candle_close": 2357.74,
-          "ema20": 2345.1973545277,
-          "ema50": 2346.5722731747,
-          "atr14": 10.1757142857,
-          "bb20_upper": 2359.0662882623,
-          "bb20_middle": 2340.0405,
-          "bb20_lower": 2321.0147117377,
-          "bb_width_pct": 1.6261,
-          "bb_upper_change_pct_of_price_per_bar": 0.114478,
-          "bb_lower_change_pct_of_price_per_bar": 0.00763,
-          "bb_expanding": false,
-          "bb_uptrend_expansion": true,
+          "bar_time_bj": "2026-10-29T03:30:00+08:00",
+          "closed_candle_close": 2363.19,
+          "ema20": 2346.9109358298,
+          "ema50": 2347.2224244926,
+          "atr14": 10.2771428571,
+          "bb20_upper": 2362.6286466381,
+          "bb20_middle": 2341.6995,
+          "bb20_lower": 2320.7703533619,
+          "bb_width_pct": 1.7875,
+          "bb_upper_change_pct_of_price_per_bar": 0.150744,
+          "bb_lower_change_pct_of_price_per_bar": -0.01034,
+          "bb_expanding": true,
+          "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.487,
+          "volume_ratio_vs_prior20": 0.662,
           "last_pivots": [
             {
               "type": "L",
@@ -1250,7 +1259,7 @@
             }
           ],
           "recent_swing_high": 2368.66,
-          "recent_swing_low": 2325.34,
+          "recent_swing_low": 2325.67,
           "close_above_prior20_high": false,
           "close_below_prior20_low": false,
           "latest_pivot_highs": [
@@ -1608,54 +1617,30 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         }
       },
-      "last_price": 2361.35,
-      "price_change_pct_24h": 0.7656,
+      "last_price": 2364.0,
+      "price_change_pct_24h": 0.6879,
       "high_24h": 2387.28,
       "low_24h": 2321.31,
-      "turnover_usdt_24h_approx": 5423005378.23,
-      "ticker_time_bj": "2026-10-29T03:34:17+08:00",
+      "turnover_usdt_24h_approx": 5444974025.82,
+      "ticker_time_bj": "2026-10-29T03:49:14+08:00",
       "five_minute_structure": {
         "status": "break_watch",
         "confirmed": false,
-        "atr14": 8.1828571429,
-        "latest_closed_bar": "2026-10-29T03:25:00+08:00",
-        "last_pivot_high": 2361.31,
+        "atr14": 7.6357142857,
+        "latest_closed_bar": "2026-10-29T03:40:00+08:00",
+        "last_pivot_high": 2364.24,
         "last_pivot_low": 2352.31,
         "side": "long",
-        "break_bar": "2026-10-29T02:35:00+08:00",
-        "break_level": 2355.48,
-        "bars_since_break": 10,
-        "retest_touched": true,
+        "break_bar": "2026-10-29T03:40:00+08:00",
+        "break_level": 2361.31,
+        "bars_since_break": 0,
+        "retest_touched": false,
         "retest_pivot_confirmed": false,
-        "structure_hl_lh": true,
+        "structure_hl_lh": false,
         "regained_level": true,
         "structure_label": "rule_confirmed_break_and_retest_not_BOS_CHoCH"
       },
       "five_minute_candles": [
-        {
-          "time": "2026-10-28T22:30:00+08:00",
-          "open": 2328.95,
-          "high": 2332.55,
-          "low": 2328.01,
-          "close": 2328.39,
-          "quote_volume": 13621025.65499
-        },
-        {
-          "time": "2026-10-28T22:35:00+08:00",
-          "open": 2328.38,
-          "high": 2330.0,
-          "low": 2326.32,
-          "close": 2328.81,
-          "quote_volume": 10866459.28657
-        },
-        {
-          "time": "2026-10-28T22:40:00+08:00",
-          "open": 2328.81,
-          "high": 2331.91,
-          "low": 2327.85,
-          "close": 2330.01,
-          "quote_volume": 13098156.58374
-        },
         {
           "time": "2026-10-28T22:45:00+08:00",
           "open": 2330.01,
@@ -2111,6 +2096,30 @@
           "low": 2354.54,
           "close": 2357.74,
           "quote_volume": 6487189.79747
+        },
+        {
+          "time": "2026-10-29T03:30:00+08:00",
+          "open": 2357.74,
+          "high": 2364.24,
+          "low": 2357.52,
+          "close": 2362.4,
+          "quote_volume": 30991219.22741
+        },
+        {
+          "time": "2026-10-29T03:35:00+08:00",
+          "open": 2362.4,
+          "high": 2362.84,
+          "low": 2357.46,
+          "close": 2359.0,
+          "quote_volume": 10943663.00482
+        },
+        {
+          "time": "2026-10-29T03:40:00+08:00",
+          "open": 2359.0,
+          "high": 2363.68,
+          "low": 2358.52,
+          "close": 2363.19,
+          "quote_volume": 9782222.27603
         }
       ]
     },
@@ -2119,21 +2128,21 @@
       "priority": "core",
       "intervals": {
         "5m": {
-          "bar_time_bj": "2026-10-29T03:25:00+08:00",
-          "closed_candle_close": 102.19,
-          "ema20": 101.8855368331,
-          "ema50": 101.5954927153,
-          "atr14": 0.4178571429,
-          "bb20_upper": 102.5204300892,
-          "bb20_middle": 101.875,
-          "bb20_lower": 101.2295699108,
-          "bb_width_pct": 1.2671,
-          "bb_upper_change_pct_of_price_per_bar": 0.035939,
-          "bb_lower_change_pct_of_price_per_bar": 0.017882,
-          "bb_expanding": false,
-          "bb_uptrend_expansion": true,
+          "bar_time_bj": "2026-10-29T03:40:00+08:00",
+          "closed_candle_close": 102.51,
+          "ema20": 102.0109944284,
+          "ema50": 101.6872368576,
+          "atr14": 0.3964285714,
+          "bb20_upper": 102.6847039089,
+          "bb20_middle": 101.9735,
+          "bb20_lower": 101.2622960911,
+          "bb_width_pct": 1.3949,
+          "bb_upper_change_pct_of_price_per_bar": 0.074026,
+          "bb_lower_change_pct_of_price_per_bar": -0.008667,
+          "bb_expanding": true,
+          "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.09,
+          "volume_ratio_vs_prior20": 0.279,
           "last_pivots": [
             {
               "type": "L",
@@ -2228,21 +2237,21 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         },
         "15m": {
-          "bar_time_bj": "2026-10-29T03:15:00+08:00",
-          "closed_candle_close": 102.19,
-          "ema20": 101.6043247478,
-          "ema50": 101.6426374645,
-          "atr14": 0.4985714286,
-          "bb20_upper": 102.286726815,
-          "bb20_middle": 101.3365,
-          "bb20_lower": 100.386273185,
-          "bb_width_pct": 1.8754,
-          "bb_upper_change_pct_of_price_per_bar": 0.104746,
-          "bb_lower_change_pct_of_price_per_bar": 0.056718,
-          "bb_expanding": false,
-          "bb_uptrend_expansion": true,
+          "bar_time_bj": "2026-10-29T03:30:00+08:00",
+          "closed_candle_close": 102.51,
+          "ema20": 101.6905865004,
+          "ema50": 101.6793191085,
+          "atr14": 0.5114285714,
+          "bb20_upper": 102.4681083994,
+          "bb20_middle": 101.421,
+          "bb20_lower": 100.3738916006,
+          "bb_width_pct": 2.0649,
+          "bb_upper_change_pct_of_price_per_bar": 0.17694,
+          "bb_lower_change_pct_of_price_per_bar": -0.012078,
+          "bb_expanding": true,
+          "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.534,
+          "volume_ratio_vs_prior20": 0.759,
           "last_pivots": [
             {
               "type": "H",
@@ -2306,7 +2315,7 @@
             }
           ],
           "recent_swing_high": 102.53,
-          "recent_swing_low": 100.39,
+          "recent_swing_low": 100.5,
           "close_above_prior20_high": false,
           "close_below_prior20_low": false,
           "latest_pivot_highs": [
@@ -2664,54 +2673,30 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         }
       },
-      "last_price": 102.32,
-      "price_change_pct_24h": 1.2268,
+      "last_price": 102.55,
+      "price_change_pct_24h": 1.4142,
       "high_24h": 103.66,
       "low_24h": 100.39,
-      "turnover_usdt_24h_approx": 746123317.26,
-      "ticker_time_bj": "2026-10-29T03:34:18+08:00",
+      "turnover_usdt_24h_approx": 751066316.23,
+      "ticker_time_bj": "2026-10-29T03:49:16+08:00",
       "five_minute_structure": {
         "status": "break_watch",
         "confirmed": false,
-        "atr14": 0.4178571429,
-        "latest_closed_bar": "2026-10-29T03:25:00+08:00",
+        "atr14": 0.3964285714,
+        "latest_closed_bar": "2026-10-29T03:40:00+08:00",
         "last_pivot_high": 102.34,
         "last_pivot_low": 101.89,
         "side": "long",
-        "break_bar": "2026-10-29T02:40:00+08:00",
-        "break_level": 102.23,
-        "bars_since_break": 9,
-        "retest_touched": true,
+        "break_bar": "2026-10-29T03:40:00+08:00",
+        "break_level": 102.34,
+        "bars_since_break": 0,
+        "retest_touched": false,
         "retest_pivot_confirmed": false,
-        "structure_hl_lh": true,
-        "regained_level": false,
+        "structure_hl_lh": false,
+        "regained_level": true,
         "structure_label": "rule_confirmed_break_and_retest_not_BOS_CHoCH"
       },
       "five_minute_candles": [
-        {
-          "time": "2026-10-28T22:30:00+08:00",
-          "open": 100.54,
-          "high": 100.72,
-          "low": 100.54,
-          "close": 100.58,
-          "quote_volume": 2811422.1439
-        },
-        {
-          "time": "2026-10-28T22:35:00+08:00",
-          "open": 100.58,
-          "high": 100.69,
-          "low": 100.5,
-          "close": 100.68,
-          "quote_volume": 3207852.052
-        },
-        {
-          "time": "2026-10-28T22:40:00+08:00",
-          "open": 100.68,
-          "high": 100.9,
-          "low": 100.65,
-          "close": 100.82,
-          "quote_volume": 5161838.1282
-        },
         {
           "time": "2026-10-28T22:45:00+08:00",
           "open": 100.81,
@@ -3167,6 +3152,30 @@
           "low": 102.01,
           "close": 102.19,
           "quote_volume": 620852.7843
+        },
+        {
+          "time": "2026-10-29T03:30:00+08:00",
+          "open": 102.18,
+          "high": 102.45,
+          "low": 102.14,
+          "close": 102.34,
+          "quote_volume": 5099218.9913
+        },
+        {
+          "time": "2026-10-29T03:35:00+08:00",
+          "open": 102.34,
+          "high": 102.37,
+          "low": 102.14,
+          "close": 102.24,
+          "quote_volume": 1081127.9976
+        },
+        {
+          "time": "2026-10-29T03:40:00+08:00",
+          "open": 102.24,
+          "high": 102.54,
+          "low": 102.18,
+          "close": 102.51,
+          "quote_volume": 1824456.3722
         }
       ]
     },
@@ -3175,21 +3184,21 @@
       "priority": "core",
       "intervals": {
         "5m": {
-          "bar_time_bj": "2026-10-29T03:25:00+08:00",
-          "closed_candle_close": 1.3273,
-          "ema20": 1.3240713482,
-          "ema50": 1.3199856512,
-          "atr14": 0.0046214286,
-          "bb20_upper": 1.3322090194,
-          "bb20_middle": 1.324,
-          "bb20_lower": 1.3157909806,
-          "bb_width_pct": 1.24,
-          "bb_upper_change_pct_of_price_per_bar": 0.022837,
-          "bb_lower_change_pct_of_price_per_bar": 0.037436,
+          "bar_time_bj": "2026-10-29T03:40:00+08:00",
+          "closed_candle_close": 1.3315,
+          "ema20": 1.3254196458,
+          "ema50": 1.321070667,
+          "atr14": 0.0043142857,
+          "bb20_upper": 1.3332755747,
+          "bb20_middle": 1.325445,
+          "bb20_lower": 1.3176144253,
+          "bb_width_pct": 1.1816,
+          "bb_upper_change_pct_of_price_per_bar": 0.065495,
+          "bb_lower_change_pct_of_price_per_bar": 0.001347,
           "bb_expanding": false,
           "bb_uptrend_expansion": true,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.181,
+          "volume_ratio_vs_prior20": 0.498,
           "last_pivots": [
             {
               "type": "L",
@@ -3284,21 +3293,21 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         },
         "15m": {
-          "bar_time_bj": "2026-10-29T03:15:00+08:00",
-          "closed_candle_close": 1.3273,
-          "ema20": 1.3196949985,
-          "ema50": 1.3207393647,
-          "atr14": 0.0060857143,
-          "bb20_upper": 1.3287534833,
-          "bb20_middle": 1.316425,
-          "bb20_lower": 1.3040965167,
-          "bb_width_pct": 1.873,
-          "bb_upper_change_pct_of_price_per_bar": 0.126283,
-          "bb_lower_change_pct_of_price_per_bar": -0.00423,
+          "bar_time_bj": "2026-10-29T03:30:00+08:00",
+          "closed_candle_close": 1.3315,
+          "ema20": 1.3208193391,
+          "ema50": 1.3211823088,
+          "atr14": 0.0062357143,
+          "bb20_upper": 1.3311332272,
+          "bb20_middle": 1.317455,
+          "bb20_lower": 1.3037767728,
+          "bb_width_pct": 2.0765,
+          "bb_upper_change_pct_of_price_per_bar": 0.178727,
+          "bb_lower_change_pct_of_price_per_bar": -0.024014,
           "bb_expanding": true,
           "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.393,
+          "volume_ratio_vs_prior20": 0.673,
           "last_pivots": [
             {
               "type": "H",
@@ -3720,54 +3729,30 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         }
       },
-      "last_price": 1.3276,
-      "price_change_pct_24h": 0.4236,
+      "last_price": 1.3335,
+      "price_change_pct_24h": 0.786,
       "high_24h": 1.3438,
       "low_24h": 1.3073,
-      "turnover_usdt_24h_approx": 192302242.67,
-      "ticker_time_bj": "2026-10-29T03:34:19+08:00",
+      "turnover_usdt_24h_approx": 194587035.01,
+      "ticker_time_bj": "2026-10-29T03:49:18+08:00",
       "five_minute_structure": {
         "status": "break_watch",
         "confirmed": false,
-        "atr14": 0.0046214286,
-        "latest_closed_bar": "2026-10-29T03:25:00+08:00",
+        "atr14": 0.0043142857,
+        "latest_closed_bar": "2026-10-29T03:40:00+08:00",
         "last_pivot_high": 1.3302,
         "last_pivot_low": 1.3232,
         "side": "long",
-        "break_bar": "2026-10-29T02:35:00+08:00",
-        "break_level": 1.3268,
-        "bars_since_break": 10,
-        "retest_touched": true,
+        "break_bar": "2026-10-29T03:40:00+08:00",
+        "break_level": 1.3302,
+        "bars_since_break": 0,
+        "retest_touched": false,
         "retest_pivot_confirmed": false,
-        "structure_hl_lh": true,
+        "structure_hl_lh": false,
         "regained_level": true,
         "structure_label": "rule_confirmed_break_and_retest_not_BOS_CHoCH"
       },
       "five_minute_candles": [
-        {
-          "time": "2026-10-28T22:30:00+08:00",
-          "open": 1.3111,
-          "high": 1.3123,
-          "low": 1.3098,
-          "close": 1.3102,
-          "quote_volume": 768628.977
-        },
-        {
-          "time": "2026-10-28T22:35:00+08:00",
-          "open": 1.3101,
-          "high": 1.3113,
-          "low": 1.309,
-          "close": 1.3104,
-          "quote_volume": 952628.8572
-        },
-        {
-          "time": "2026-10-28T22:40:00+08:00",
-          "open": 1.3104,
-          "high": 1.3128,
-          "low": 1.3099,
-          "close": 1.3109,
-          "quote_volume": 842281.2165
-        },
         {
           "time": "2026-10-28T22:45:00+08:00",
           "open": 1.3109,
@@ -4223,6 +4208,30 @@
           "low": 1.3254,
           "close": 1.3273,
           "quote_volume": 274834.4678
+        },
+        {
+          "time": "2026-10-29T03:30:00+08:00",
+          "open": 1.3272,
+          "high": 1.3297,
+          "low": 1.3272,
+          "close": 1.3285,
+          "quote_volume": 571949.1416
+        },
+        {
+          "time": "2026-10-29T03:35:00+08:00",
+          "open": 1.3284,
+          "high": 1.329,
+          "low": 1.3265,
+          "close": 1.3275,
+          "quote_volume": 410207.5379
+        },
+        {
+          "time": "2026-10-29T03:40:00+08:00",
+          "open": 1.3274,
+          "high": 1.332,
+          "low": 1.3271,
+          "close": 1.3315,
+          "quote_volume": 731093.3052
         }
       ]
     },
@@ -4231,21 +4240,21 @@
       "priority": "core",
       "intervals": {
         "5m": {
-          "bar_time_bj": "2026-10-29T03:25:00+08:00",
-          "closed_candle_close": 59.06,
-          "ema20": 58.6755068318,
-          "ema50": 58.511404059,
-          "atr14": 0.28,
-          "bb20_upper": 59.181573881,
-          "bb20_middle": 58.52,
-          "bb20_lower": 57.858426119,
-          "bb_width_pct": 2.261,
-          "bb_upper_change_pct_of_price_per_bar": 0.102576,
-          "bb_lower_change_pct_of_price_per_bar": -0.039928,
+          "bar_time_bj": "2026-10-29T03:40:00+08:00",
+          "closed_candle_close": 59.26,
+          "ema20": 58.8141850251,
+          "ema50": 58.5924296111,
+          "atr14": 0.2757142857,
+          "bb20_upper": 59.4431933107,
+          "bb20_middle": 58.618,
+          "bb20_lower": 57.7928066893,
+          "bb_width_pct": 2.8155,
+          "bb_upper_change_pct_of_price_per_bar": 0.136208,
+          "bb_lower_change_pct_of_price_per_bar": -0.041709,
           "bb_expanding": true,
           "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.628,
+          "volume_ratio_vs_prior20": 0.349,
           "last_pivots": [
             {
               "type": "H",
@@ -4308,7 +4317,7 @@
               "time": "2026-10-29T02:55:00+08:00"
             }
           ],
-          "recent_swing_high": 59.1,
+          "recent_swing_high": 59.37,
           "recent_swing_low": 57.84,
           "close_above_prior20_high": false,
           "close_below_prior20_low": false,
@@ -4340,21 +4349,21 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         },
         "15m": {
-          "bar_time_bj": "2026-10-29T03:15:00+08:00",
-          "closed_candle_close": 59.06,
-          "ema20": 58.452529508,
-          "ema50": 58.0552022356,
-          "atr14": 0.5571428571,
-          "bb20_upper": 59.3890135134,
-          "bb20_middle": 58.538,
-          "bb20_lower": 57.6869864866,
-          "bb_width_pct": 2.9076,
-          "bb_upper_change_pct_of_price_per_bar": -0.062649,
-          "bb_lower_change_pct_of_price_per_bar": 0.364037,
+          "bar_time_bj": "2026-10-29T03:30:00+08:00",
+          "closed_candle_close": 59.26,
+          "ema20": 58.5294319572,
+          "ema50": 58.1026397373,
+          "atr14": 0.5492857143,
+          "bb20_upper": 59.3864282861,
+          "bb20_middle": 58.6265,
+          "bb20_lower": 57.8665717139,
+          "bb_width_pct": 2.5924,
+          "bb_upper_change_pct_of_price_per_bar": -0.004363,
+          "bb_lower_change_pct_of_price_per_bar": 0.303046,
           "bb_expanding": false,
           "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.358,
+          "volume_ratio_vs_prior20": 0.484,
           "last_pivots": [
             {
               "type": "L",
@@ -4418,7 +4427,7 @@
             }
           ],
           "recent_swing_high": 59.51,
-          "recent_swing_low": 57.11,
+          "recent_swing_low": 57.14,
           "close_above_prior20_high": false,
           "close_below_prior20_low": false,
           "latest_pivot_highs": [
@@ -4776,23 +4785,23 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         }
       },
-      "last_price": 59.27,
-      "price_change_pct_24h": 4.5511,
+      "last_price": 59.35,
+      "price_change_pct_24h": 4.6184,
       "high_24h": 59.51,
       "low_24h": 56.55,
-      "turnover_usdt_24h_approx": 28482542.27,
-      "ticker_time_bj": "2026-10-29T03:34:20+08:00",
+      "turnover_usdt_24h_approx": 28827660.05,
+      "ticker_time_bj": "2026-10-29T03:49:19+08:00",
       "five_minute_structure": {
         "status": "break_watch",
         "confirmed": false,
-        "atr14": 0.28,
-        "latest_closed_bar": "2026-10-29T03:25:00+08:00",
-        "last_pivot_high": 58.77,
+        "atr14": 0.2757142857,
+        "latest_closed_bar": "2026-10-29T03:40:00+08:00",
+        "last_pivot_high": 59.37,
         "last_pivot_low": 58.33,
         "side": "long",
         "break_bar": "2026-10-29T03:10:00+08:00",
         "break_level": 58.77,
-        "bars_since_break": 3,
+        "bars_since_break": 6,
         "retest_touched": true,
         "retest_pivot_confirmed": false,
         "structure_hl_lh": false,
@@ -4800,30 +4809,6 @@
         "structure_label": "rule_confirmed_break_and_retest_not_BOS_CHoCH"
       },
       "five_minute_candles": [
-        {
-          "time": "2026-10-28T22:30:00+08:00",
-          "open": 57.29,
-          "high": 57.45,
-          "low": 57.29,
-          "close": 57.31,
-          "quote_volume": 191167.082
-        },
-        {
-          "time": "2026-10-28T22:35:00+08:00",
-          "open": 57.31,
-          "high": 57.31,
-          "low": 57.14,
-          "close": 57.29,
-          "quote_volume": 287045.125
-        },
-        {
-          "time": "2026-10-28T22:40:00+08:00",
-          "open": 57.29,
-          "high": 57.52,
-          "low": 57.29,
-          "close": 57.49,
-          "quote_volume": 191884.292
-        },
         {
           "time": "2026-10-28T22:45:00+08:00",
           "open": 57.48,
@@ -5279,6 +5264,30 @@
           "low": 59.01,
           "close": 59.06,
           "quote_volume": 132354.58
+        },
+        {
+          "time": "2026-10-29T03:30:00+08:00",
+          "open": 59.07,
+          "high": 59.37,
+          "low": 59.06,
+          "close": 59.26,
+          "quote_volume": 181125.095
+        },
+        {
+          "time": "2026-10-29T03:35:00+08:00",
+          "open": 59.25,
+          "high": 59.28,
+          "low": 59.1,
+          "close": 59.11,
+          "quote_volume": 147164.92
+        },
+        {
+          "time": "2026-10-29T03:40:00+08:00",
+          "open": 59.1,
+          "high": 59.28,
+          "low": 59.0,
+          "close": 59.26,
+          "quote_volume": 69860.326
         }
       ]
     },
@@ -5287,21 +5296,21 @@
       "priority": "core",
       "intervals": {
         "5m": {
-          "bar_time_bj": "2026-10-29T03:25:00+08:00",
-          "closed_candle_close": 0.2045,
-          "ema20": 0.2036642958,
-          "ema50": 0.2030887581,
-          "atr14": 0.0012142857,
-          "bb20_upper": 0.2056149766,
-          "bb20_middle": 0.203475,
-          "bb20_lower": 0.2013350234,
-          "bb_width_pct": 2.1034,
-          "bb_upper_change_pct_of_price_per_bar": 0.057146,
-          "bb_lower_change_pct_of_price_per_bar": 0.035763,
-          "bb_expanding": false,
-          "bb_uptrend_expansion": true,
+          "bar_time_bj": "2026-10-29T03:40:00+08:00",
+          "closed_candle_close": 0.2059,
+          "ema20": 0.2040956464,
+          "ema50": 0.2033475316,
+          "atr14": 0.0011928571,
+          "bb20_upper": 0.2062437418,
+          "bb20_middle": 0.20385,
+          "bb20_lower": 0.2014562582,
+          "bb_width_pct": 2.3485,
+          "bb_upper_change_pct_of_price_per_bar": 0.151773,
+          "bb_lower_change_pct_of_price_per_bar": -0.030355,
+          "bb_expanding": true,
+          "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.327,
+          "volume_ratio_vs_prior20": 0.534,
           "last_pivots": [
             {
               "type": "L",
@@ -5364,9 +5373,9 @@
               "time": "2026-10-29T02:35:00+08:00"
             }
           ],
-          "recent_swing_high": 0.2052,
+          "recent_swing_high": 0.2055,
           "recent_swing_low": 0.2013,
-          "close_above_prior20_high": false,
+          "close_above_prior20_high": true,
           "close_below_prior20_low": false,
           "latest_pivot_highs": [
             {
@@ -5396,21 +5405,21 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         },
         "15m": {
-          "bar_time_bj": "2026-10-29T03:15:00+08:00",
-          "closed_candle_close": 0.2045,
-          "ema20": 0.2031580519,
-          "ema50": 0.203901205,
-          "atr14": 0.0014642857,
-          "bb20_upper": 0.2047258053,
-          "bb20_middle": 0.20263,
-          "bb20_lower": 0.2005341947,
-          "bb_width_pct": 2.0686,
-          "bb_upper_change_pct_of_price_per_bar": 0.139874,
-          "bb_lower_change_pct_of_price_per_bar": 0.001935,
-          "bb_expanding": false,
-          "bb_uptrend_expansion": true,
+          "bar_time_bj": "2026-10-29T03:30:00+08:00",
+          "closed_candle_close": 0.2059,
+          "ema20": 0.2034192097,
+          "ema50": 0.2039872103,
+          "atr14": 0.0014928571,
+          "bb20_upper": 0.2053262824,
+          "bb20_middle": 0.20284,
+          "bb20_lower": 0.2003537176,
+          "bb_width_pct": 2.4515,
+          "bb_upper_change_pct_of_price_per_bar": 0.291635,
+          "bb_lower_change_pct_of_price_per_bar": -0.087653,
+          "bb_expanding": true,
+          "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.565,
+          "volume_ratio_vs_prior20": 0.791,
           "last_pivots": [
             {
               "type": "H",
@@ -5475,7 +5484,7 @@
           ],
           "recent_swing_high": 0.2052,
           "recent_swing_low": 0.2005,
-          "close_above_prior20_high": false,
+          "close_above_prior20_high": true,
           "close_below_prior20_low": false,
           "latest_pivot_highs": [
             {
@@ -5832,54 +5841,30 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         }
       },
-      "last_price": 0.205,
-      "price_change_pct_24h": -0.0488,
+      "last_price": 0.2065,
+      "price_change_pct_24h": 0.6335,
       "high_24h": 0.2085,
       "low_24h": 0.2005,
-      "turnover_usdt_24h_approx": 28151089.95,
-      "ticker_time_bj": "2026-10-29T03:34:22+08:00",
+      "turnover_usdt_24h_approx": 28847694.82,
+      "ticker_time_bj": "2026-10-29T03:49:20+08:00",
       "five_minute_structure": {
         "status": "break_watch",
         "confirmed": false,
-        "atr14": 0.0012142857,
-        "latest_closed_bar": "2026-10-29T03:25:00+08:00",
+        "atr14": 0.0011928571,
+        "latest_closed_bar": "2026-10-29T03:40:00+08:00",
         "last_pivot_high": 0.2052,
         "last_pivot_low": 0.2013,
         "side": "long",
-        "break_bar": "2026-10-29T02:40:00+08:00",
-        "break_level": 0.2043,
-        "bars_since_break": 9,
-        "retest_touched": true,
+        "break_bar": "2026-10-29T03:40:00+08:00",
+        "break_level": 0.2052,
+        "bars_since_break": 0,
+        "retest_touched": false,
         "retest_pivot_confirmed": false,
         "structure_hl_lh": false,
         "regained_level": true,
         "structure_label": "rule_confirmed_break_and_retest_not_BOS_CHoCH"
       },
       "five_minute_candles": [
-        {
-          "time": "2026-10-28T22:30:00+08:00",
-          "open": 0.2016,
-          "high": 0.2021,
-          "low": 0.2016,
-          "close": 0.2018,
-          "quote_volume": 148397.264
-        },
-        {
-          "time": "2026-10-28T22:35:00+08:00",
-          "open": 0.2018,
-          "high": 0.2019,
-          "low": 0.2013,
-          "close": 0.2017,
-          "quote_volume": 82975.611
-        },
-        {
-          "time": "2026-10-28T22:40:00+08:00",
-          "open": 0.2016,
-          "high": 0.202,
-          "low": 0.2015,
-          "close": 0.2017,
-          "quote_volume": 122618.349
-        },
         {
           "time": "2026-10-28T22:45:00+08:00",
           "open": 0.2016,
@@ -6335,6 +6320,30 @@
           "low": 0.2043,
           "close": 0.2045,
           "quote_volume": 86037.612
+        },
+        {
+          "time": "2026-10-29T03:30:00+08:00",
+          "open": 0.2045,
+          "high": 0.2055,
+          "low": 0.2045,
+          "close": 0.2051,
+          "quote_volume": 116490.987
+        },
+        {
+          "time": "2026-10-29T03:35:00+08:00",
+          "open": 0.2051,
+          "high": 0.2051,
+          "low": 0.2045,
+          "close": 0.2049,
+          "quote_volume": 115009.4
+        },
+        {
+          "time": "2026-10-29T03:40:00+08:00",
+          "open": 0.2048,
+          "high": 0.206,
+          "low": 0.2047,
+          "close": 0.2059,
+          "quote_volume": 136665.495
         }
       ]
     },
@@ -6343,21 +6352,21 @@
       "priority": "core",
       "intervals": {
         "5m": {
-          "bar_time_bj": "2026-10-29T03:25:00+08:00",
-          "closed_candle_close": 286.7,
-          "ema20": 285.53725305,
-          "ema50": 287.4640678102,
-          "atr14": 1.4807142857,
-          "bb20_upper": 287.2186069282,
-          "bb20_middle": 284.863,
-          "bb20_lower": 282.5073930718,
-          "bb_width_pct": 1.6539,
-          "bb_upper_change_pct_of_price_per_bar": 0.040749,
-          "bb_lower_change_pct_of_price_per_bar": -0.018426,
+          "bar_time_bj": "2026-10-29T03:40:00+08:00",
+          "closed_candle_close": 287.7,
+          "ema20": 286.0497934862,
+          "ema50": 287.4737773403,
+          "atr14": 1.3528571429,
+          "bb20_upper": 288.084120145,
+          "bb20_middle": 285.1345,
+          "bb20_lower": 282.184879855,
+          "bb_width_pct": 2.0689,
+          "bb_upper_change_pct_of_price_per_bar": 0.105029,
+          "bb_lower_change_pct_of_price_per_bar": -0.043854,
           "bb_expanding": true,
           "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.237,
+          "volume_ratio_vs_prior20": 0.494,
           "last_pivots": [
             {
               "type": "H",
@@ -6420,7 +6429,7 @@
               "time": "2026-10-29T02:50:00+08:00"
             }
           ],
-          "recent_swing_high": 287.18,
+          "recent_swing_high": 287.9,
           "recent_swing_low": 282.08,
           "close_above_prior20_high": false,
           "close_below_prior20_low": false,
@@ -6452,21 +6461,21 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         },
         "15m": {
-          "bar_time_bj": "2026-10-29T03:15:00+08:00",
-          "closed_candle_close": 286.7,
-          "ema20": 288.1229546178,
-          "ema50": 291.7546395247,
-          "atr14": 2.3678571429,
-          "bb20_upper": 296.0481106977,
-          "bb20_middle": 288.4745,
-          "bb20_lower": 280.9008893023,
-          "bb_width_pct": 5.2508,
-          "bb_upper_change_pct_of_price_per_bar": -0.223884,
-          "bb_lower_change_pct_of_price_per_bar": -0.022367,
+          "bar_time_bj": "2026-10-29T03:30:00+08:00",
+          "closed_candle_close": 287.7,
+          "ema20": 288.0826642685,
+          "ema50": 291.5922045043,
+          "atr14": 2.2992857143,
+          "bb20_upper": 295.3960467904,
+          "bb20_middle": 288.183,
+          "bb20_lower": 280.9699532096,
+          "bb_width_pct": 5.0059,
+          "bb_upper_change_pct_of_price_per_bar": -0.226647,
+          "bb_lower_change_pct_of_price_per_bar": 0.024006,
           "bb_expanding": false,
           "bb_uptrend_expansion": false,
-          "bb_downtrend_expansion": true,
-          "volume_ratio_vs_prior20": 0.432,
+          "bb_downtrend_expansion": false,
+          "volume_ratio_vs_prior20": 0.643,
           "last_pivots": [
             {
               "type": "H",
@@ -6529,7 +6538,7 @@
               "time": "2026-10-29T02:15:00+08:00"
             }
           ],
-          "recent_swing_high": 294.68,
+          "recent_swing_high": 294.58,
           "recent_swing_low": 282.08,
           "close_above_prior20_high": false,
           "close_below_prior20_low": false,
@@ -6888,54 +6897,30 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         }
       },
-      "last_price": 287.27,
-      "price_change_pct_24h": -0.2535,
+      "last_price": 288.16,
+      "price_change_pct_24h": -0.3975,
       "high_24h": 304.8,
       "low_24h": 282.08,
-      "turnover_usdt_24h_approx": 71799801.3,
-      "ticker_time_bj": "2026-10-29T03:34:24+08:00",
+      "turnover_usdt_24h_approx": 72352348.15,
+      "ticker_time_bj": "2026-10-29T03:49:22+08:00",
       "five_minute_structure": {
         "status": "break_watch",
         "confirmed": false,
-        "atr14": 1.4807142857,
-        "latest_closed_bar": "2026-10-29T03:25:00+08:00",
-        "last_pivot_high": 286.25,
+        "atr14": 1.3528571429,
+        "latest_closed_bar": "2026-10-29T03:40:00+08:00",
+        "last_pivot_high": 287.9,
         "last_pivot_low": 283.35,
         "side": "long",
         "break_bar": "2026-10-29T03:25:00+08:00",
         "break_level": 286.25,
-        "bars_since_break": 0,
-        "retest_touched": false,
+        "bars_since_break": 3,
+        "retest_touched": true,
         "retest_pivot_confirmed": false,
         "structure_hl_lh": false,
         "regained_level": true,
         "structure_label": "rule_confirmed_break_and_retest_not_BOS_CHoCH"
       },
       "five_minute_candles": [
-        {
-          "time": "2026-10-28T22:30:00+08:00",
-          "open": 293.78,
-          "high": 294.58,
-          "low": 293.73,
-          "close": 293.95,
-          "quote_volume": 184869.0062
-        },
-        {
-          "time": "2026-10-28T22:35:00+08:00",
-          "open": 293.91,
-          "high": 293.98,
-          "low": 293.31,
-          "close": 293.41,
-          "quote_volume": 151413.7898
-        },
-        {
-          "time": "2026-10-28T22:40:00+08:00",
-          "open": 293.42,
-          "high": 293.83,
-          "low": 293.39,
-          "close": 293.53,
-          "quote_volume": 120061.5813
-        },
         {
           "time": "2026-10-28T22:45:00+08:00",
           "open": 293.51,
@@ -7391,6 +7376,30 @@
           "low": 285.75,
           "close": 286.7,
           "quote_volume": 93491.5657
+        },
+        {
+          "time": "2026-10-29T03:30:00+08:00",
+          "open": 286.69,
+          "high": 287.9,
+          "low": 286.42,
+          "close": 287.51,
+          "quote_volume": 313315.4406
+        },
+        {
+          "time": "2026-10-29T03:35:00+08:00",
+          "open": 287.48,
+          "high": 287.65,
+          "low": 286.72,
+          "close": 287.31,
+          "quote_volume": 101321.7001
+        },
+        {
+          "time": "2026-10-29T03:40:00+08:00",
+          "open": 287.31,
+          "high": 287.88,
+          "low": 286.94,
+          "close": 287.7,
+          "quote_volume": 188020.3414
         }
       ]
     },
@@ -7399,21 +7408,21 @@
       "priority": "core",
       "intervals": {
         "5m": {
-          "bar_time_bj": "2026-10-29T03:25:00+08:00",
-          "closed_candle_close": 11.716,
-          "ema20": 11.65719112,
-          "ema50": 11.6101313112,
-          "atr14": 0.0608571429,
-          "bb20_upper": 11.7845359863,
-          "bb20_middle": 11.64575,
-          "bb20_lower": 11.5069640137,
-          "bb_width_pct": 2.3835,
-          "bb_upper_change_pct_of_price_per_bar": 0.061705,
-          "bb_lower_change_pct_of_price_per_bar": 0.067178,
+          "bar_time_bj": "2026-10-29T03:40:00+08:00",
+          "closed_candle_close": 11.777,
+          "ema20": 11.6825840438,
+          "ema50": 11.6269957854,
+          "atr14": 0.0573571429,
+          "bb20_upper": 11.8132491059,
+          "bb20_middle": 11.67345,
+          "bb20_lower": 11.5336508941,
+          "bb_width_pct": 2.3952,
+          "bb_upper_change_pct_of_price_per_bar": 0.11817,
+          "bb_lower_change_pct_of_price_per_bar": 0.031274,
           "bb_expanding": false,
           "bb_uptrend_expansion": true,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.683,
+          "volume_ratio_vs_prior20": 0.497,
           "last_pivots": [
             {
               "type": "L",
@@ -7476,9 +7485,9 @@
               "time": "2026-10-29T03:05:00+08:00"
             }
           ],
-          "recent_swing_high": 11.758,
+          "recent_swing_high": 11.768,
           "recent_swing_low": 11.515,
-          "close_above_prior20_high": false,
+          "close_above_prior20_high": true,
           "close_below_prior20_low": false,
           "latest_pivot_highs": [
             {
@@ -7508,21 +7517,21 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         },
         "15m": {
-          "bar_time_bj": "2026-10-29T03:15:00+08:00",
-          "closed_candle_close": 11.716,
-          "ema20": 11.6095485447,
-          "ema50": 11.6252779843,
-          "atr14": 0.0762142857,
-          "bb20_upper": 11.7159025035,
-          "bb20_middle": 11.5721,
-          "bb20_lower": 11.4282974965,
-          "bb_width_pct": 2.4853,
-          "bb_upper_change_pct_of_price_per_bar": 0.204489,
-          "bb_lower_change_pct_of_price_per_bar": -0.023539,
+          "bar_time_bj": "2026-10-29T03:30:00+08:00",
+          "closed_candle_close": 11.777,
+          "ema20": 11.6254971483,
+          "ema50": 11.6315517691,
+          "atr14": 0.0778571429,
+          "bb20_upper": 11.7515979543,
+          "bb20_middle": 11.5854,
+          "bb20_lower": 11.4192020457,
+          "bb_width_pct": 2.8691,
+          "bb_upper_change_pct_of_price_per_bar": 0.303095,
+          "bb_lower_change_pct_of_price_per_bar": -0.077231,
           "bb_expanding": true,
           "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 1.418,
+          "volume_ratio_vs_prior20": 1.08,
           "last_pivots": [
             {
               "type": "L",
@@ -7587,7 +7596,7 @@
           ],
           "recent_swing_high": 11.758,
           "recent_swing_low": 11.459,
-          "close_above_prior20_high": false,
+          "close_above_prior20_high": true,
           "close_below_prior20_low": false,
           "latest_pivot_highs": [
             {
@@ -7944,54 +7953,30 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         }
       },
-      "last_price": 11.741,
-      "price_change_pct_24h": 2.4341,
+      "last_price": 11.813,
+      "price_change_pct_24h": 2.8738,
       "high_24h": 11.887,
       "low_24h": 11.435,
-      "turnover_usdt_24h_approx": 31419466.65,
-      "ticker_time_bj": "2026-10-29T03:34:25+08:00",
+      "turnover_usdt_24h_approx": 32135149.61,
+      "ticker_time_bj": "2026-10-29T03:49:24+08:00",
       "five_minute_structure": {
-        "status": "retest_confirmed",
-        "confirmed": true,
-        "atr14": 0.0608571429,
-        "latest_closed_bar": "2026-10-29T03:25:00+08:00",
+        "status": "break_watch",
+        "confirmed": false,
+        "atr14": 0.0573571429,
+        "latest_closed_bar": "2026-10-29T03:40:00+08:00",
         "last_pivot_high": 11.748,
-        "last_pivot_low": 11.637,
+        "last_pivot_low": 11.687,
         "side": "long",
-        "break_bar": "2026-10-29T02:35:00+08:00",
-        "break_level": 11.638,
-        "bars_since_break": 10,
-        "retest_touched": true,
-        "retest_pivot_confirmed": true,
-        "structure_hl_lh": true,
+        "break_bar": "2026-10-29T03:40:00+08:00",
+        "break_level": 11.748,
+        "bars_since_break": 0,
+        "retest_touched": false,
+        "retest_pivot_confirmed": false,
+        "structure_hl_lh": false,
         "regained_level": true,
         "structure_label": "rule_confirmed_break_and_retest_not_BOS_CHoCH"
       },
       "five_minute_candles": [
-        {
-          "time": "2026-10-28T22:30:00+08:00",
-          "open": 11.505,
-          "high": 11.536,
-          "low": 11.505,
-          "close": 11.516,
-          "quote_volume": 72342.4492
-        },
-        {
-          "time": "2026-10-28T22:35:00+08:00",
-          "open": 11.516,
-          "high": 11.524,
-          "low": 11.493,
-          "close": 11.509,
-          "quote_volume": 81883.1691
-        },
-        {
-          "time": "2026-10-28T22:40:00+08:00",
-          "open": 11.509,
-          "high": 11.529,
-          "low": 11.507,
-          "close": 11.511,
-          "quote_volume": 73075.6825
-        },
         {
           "time": "2026-10-28T22:45:00+08:00",
           "open": 11.511,
@@ -8447,6 +8432,30 @@
           "low": 11.687,
           "close": 11.716,
           "quote_volume": 165145.6868
+        },
+        {
+          "time": "2026-10-29T03:30:00+08:00",
+          "open": 11.716,
+          "high": 11.768,
+          "low": 11.713,
+          "close": 11.745,
+          "quote_volume": 138290.2776
+        },
+        {
+          "time": "2026-10-29T03:35:00+08:00",
+          "open": 11.744,
+          "high": 11.755,
+          "low": 11.734,
+          "close": 11.74,
+          "quote_volume": 217181.1419
+        },
+        {
+          "time": "2026-10-29T03:40:00+08:00",
+          "open": 11.74,
+          "high": 11.783,
+          "low": 11.734,
+          "close": 11.777,
+          "quote_volume": 125492.7719
         }
       ]
     },
@@ -8455,21 +8464,21 @@
       "priority": "extra",
       "intervals": {
         "5m": {
-          "bar_time_bj": "2026-10-29T03:25:00+08:00",
-          "closed_candle_close": 0.07962,
-          "ema20": 0.0794338912,
-          "ema50": 0.0793107328,
-          "atr14": 0.0002814286,
-          "bb20_upper": 0.0798799782,
-          "bb20_middle": 0.0793925,
-          "bb20_lower": 0.0789050218,
-          "bb_width_pct": 1.228,
-          "bb_upper_change_pct_of_price_per_bar": 0.03318,
-          "bb_lower_change_pct_of_price_per_bar": 0.012035,
-          "bb_expanding": false,
-          "bb_uptrend_expansion": true,
+          "bar_time_bj": "2026-10-29T03:40:00+08:00",
+          "closed_candle_close": 0.07979,
+          "ema20": 0.079512558,
+          "ema50": 0.0793624089,
+          "atr14": 0.00027,
+          "bb20_upper": 0.0799926625,
+          "bb20_middle": 0.079458,
+          "bb20_lower": 0.0789233375,
+          "bb_width_pct": 1.3458,
+          "bb_upper_change_pct_of_price_per_bar": 0.052615,
+          "bb_lower_change_pct_of_price_per_bar": -0.00123,
+          "bb_expanding": true,
+          "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.217,
+          "volume_ratio_vs_prior20": 0.322,
           "last_pivots": [
             {
               "type": "H",
@@ -8532,7 +8541,7 @@
               "time": "2026-10-29T03:05:00+08:00"
             }
           ],
-          "recent_swing_high": 0.0798,
+          "recent_swing_high": 0.07982,
           "recent_swing_low": 0.07887,
           "close_above_prior20_high": false,
           "close_below_prior20_low": false,
@@ -8564,21 +8573,21 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         },
         "15m": {
-          "bar_time_bj": "2026-10-29T03:15:00+08:00",
-          "closed_candle_close": 0.07962,
-          "ema20": 0.0793231772,
-          "ema50": 0.07938074,
-          "atr14": 0.0003664286,
-          "bb20_upper": 0.0797168042,
-          "bb20_middle": 0.079224,
-          "bb20_lower": 0.0787311958,
-          "bb_width_pct": 1.2441,
-          "bb_upper_change_pct_of_price_per_bar": 0.042233,
-          "bb_lower_change_pct_of_price_per_bar": 0.070804,
+          "bar_time_bj": "2026-10-29T03:30:00+08:00",
+          "closed_candle_close": 0.07979,
+          "ema20": 0.0793676405,
+          "ema50": 0.0793983137,
+          "atr14": 0.0003714286,
+          "bb20_upper": 0.0797845489,
+          "bb20_middle": 0.0792735,
+          "bb20_lower": 0.0787624511,
+          "bb_width_pct": 1.2893,
+          "bb_upper_change_pct_of_price_per_bar": 0.084904,
+          "bb_lower_change_pct_of_price_per_bar": 0.039172,
           "bb_expanding": false,
           "bb_uptrend_expansion": true,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.4,
+          "volume_ratio_vs_prior20": 0.562,
           "last_pivots": [
             {
               "type": "H",
@@ -8642,7 +8651,7 @@
             }
           ],
           "recent_swing_high": 0.0798,
-          "recent_swing_low": 0.07854,
+          "recent_swing_low": 0.07869,
           "close_above_prior20_high": false,
           "close_below_prior20_low": false,
           "latest_pivot_highs": [
@@ -9000,54 +9009,30 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         }
       },
-      "last_price": 0.07971,
-      "price_change_pct_24h": 1.7748,
+      "last_price": 0.07993,
+      "price_change_pct_24h": 1.9775,
       "high_24h": 0.08061,
       "low_24h": 0.07819,
-      "turnover_usdt_24h_approx": 181457135.15,
-      "ticker_time_bj": "2026-10-29T03:34:25+08:00",
+      "turnover_usdt_24h_approx": 182644964.1,
+      "ticker_time_bj": "2026-10-29T03:49:25+08:00",
       "five_minute_structure": {
         "status": "break_watch",
         "confirmed": false,
-        "atr14": 0.0002814286,
-        "latest_closed_bar": "2026-10-29T03:25:00+08:00",
+        "atr14": 0.00027,
+        "latest_closed_bar": "2026-10-29T03:40:00+08:00",
         "last_pivot_high": 0.07978,
         "last_pivot_low": 0.07887,
-        "side": "short",
-        "break_bar": "2026-10-29T02:15:00+08:00",
-        "break_level": 0.07903,
-        "bars_since_break": 14,
-        "retest_touched": true,
+        "side": "long",
+        "break_bar": "2026-10-29T03:40:00+08:00",
+        "break_level": 0.07978,
+        "bars_since_break": 0,
+        "retest_touched": false,
         "retest_pivot_confirmed": false,
         "structure_hl_lh": false,
-        "regained_level": false,
+        "regained_level": true,
         "structure_label": "rule_confirmed_break_and_retest_not_BOS_CHoCH"
       },
       "five_minute_candles": [
-        {
-          "time": "2026-10-28T22:30:00+08:00",
-          "open": 0.07872,
-          "high": 0.07888,
-          "low": 0.0787,
-          "close": 0.07882,
-          "quote_volume": 726955.4882
-        },
-        {
-          "time": "2026-10-28T22:35:00+08:00",
-          "open": 0.07882,
-          "high": 0.07885,
-          "low": 0.07869,
-          "close": 0.07882,
-          "quote_volume": 285488.3034
-        },
-        {
-          "time": "2026-10-28T22:40:00+08:00",
-          "open": 0.07882,
-          "high": 0.07894,
-          "low": 0.07877,
-          "close": 0.0788,
-          "quote_volume": 532170.325
-        },
         {
           "time": "2026-10-28T22:45:00+08:00",
           "open": 0.0788,
@@ -9503,6 +9488,30 @@
           "low": 0.0795,
           "close": 0.07962,
           "quote_volume": 264047.578
+        },
+        {
+          "time": "2026-10-29T03:30:00+08:00",
+          "open": 0.07961,
+          "high": 0.07982,
+          "low": 0.07959,
+          "close": 0.07978,
+          "quote_volume": 573286.3145
+        },
+        {
+          "time": "2026-10-29T03:35:00+08:00",
+          "open": 0.07978,
+          "high": 0.07978,
+          "low": 0.07961,
+          "close": 0.07964,
+          "quote_volume": 259524.7743
+        },
+        {
+          "time": "2026-10-29T03:40:00+08:00",
+          "open": 0.07964,
+          "high": 0.07984,
+          "low": 0.0796,
+          "close": 0.07979,
+          "quote_volume": 376029.8343
         }
       ]
     },
@@ -9511,21 +9520,21 @@
       "priority": "extra",
       "intervals": {
         "5m": {
-          "bar_time_bj": "2026-10-29T03:25:00+08:00",
-          "closed_candle_close": 8.948,
-          "ema20": 8.9130885804,
-          "ema50": 8.8897739489,
-          "atr14": 0.0422857143,
-          "bb20_upper": 8.9876539823,
-          "bb20_middle": 8.9051,
-          "bb20_lower": 8.8225460177,
-          "bb_width_pct": 1.8541,
-          "bb_upper_change_pct_of_price_per_bar": 0.052841,
-          "bb_lower_change_pct_of_price_per_bar": 0.04327,
+          "bar_time_bj": "2026-10-29T03:40:00+08:00",
+          "closed_candle_close": 8.979,
+          "ema20": 8.9263978824,
+          "ema50": 8.8987292187,
+          "atr14": 0.0402857143,
+          "bb20_upper": 9.0045081854,
+          "bb20_middle": 8.91975,
+          "bb20_lower": 8.8349918146,
+          "bb_width_pct": 1.9005,
+          "bb_upper_change_pct_of_price_per_bar": 0.087489,
+          "bb_lower_change_pct_of_price_per_bar": 0.022768,
           "bb_expanding": false,
           "bb_uptrend_expansion": true,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.729,
+          "volume_ratio_vs_prior20": 0.447,
           "last_pivots": [
             {
               "type": "H",
@@ -9588,9 +9597,9 @@
               "time": "2026-10-29T02:55:00+08:00"
             }
           ],
-          "recent_swing_high": 8.975,
+          "recent_swing_high": 8.977,
           "recent_swing_low": 8.83,
-          "close_above_prior20_high": false,
+          "close_above_prior20_high": true,
           "close_below_prior20_low": false,
           "latest_pivot_highs": [
             {
@@ -9620,21 +9629,21 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         },
         "15m": {
-          "bar_time_bj": "2026-10-29T03:15:00+08:00",
-          "closed_candle_close": 8.948,
-          "ema20": 8.8918419507,
-          "ema50": 8.9114694853,
-          "atr14": 0.0525714286,
-          "bb20_upper": 8.9522908106,
-          "bb20_middle": 8.8734,
-          "bb20_lower": 8.7945091894,
-          "bb_width_pct": 1.7781,
-          "bb_upper_change_pct_of_price_per_bar": 0.103573,
-          "bb_lower_change_pct_of_price_per_bar": 0.059592,
-          "bb_expanding": false,
-          "bb_uptrend_expansion": true,
+          "bar_time_bj": "2026-10-29T03:30:00+08:00",
+          "closed_candle_close": 8.979,
+          "ema20": 8.900143414,
+          "ema50": 8.9143844835,
+          "atr14": 0.0532142857,
+          "bb20_upper": 8.9688807594,
+          "bb20_middle": 8.88125,
+          "bb20_lower": 8.7936192406,
+          "bb_width_pct": 1.9734,
+          "bb_upper_change_pct_of_price_per_bar": 0.184764,
+          "bb_lower_change_pct_of_price_per_bar": -0.009911,
+          "bb_expanding": true,
+          "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.718,
+          "volume_ratio_vs_prior20": 0.591,
           "last_pivots": [
             {
               "type": "H",
@@ -9697,9 +9706,9 @@
               "time": "2026-10-29T01:15:00+08:00"
             }
           ],
-          "recent_swing_high": 8.974,
-          "recent_swing_low": 8.784,
-          "close_above_prior20_high": false,
+          "recent_swing_high": 8.975,
+          "recent_swing_low": 8.801,
+          "close_above_prior20_high": true,
           "close_below_prior20_low": false,
           "latest_pivot_highs": [
             {
@@ -10056,54 +10065,30 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         }
       },
-      "last_price": 8.962,
-      "price_change_pct_24h": 0.8439,
+      "last_price": 9.005,
+      "price_change_pct_24h": 1.3278,
       "high_24h": 9.084,
       "low_24h": 8.784,
-      "turnover_usdt_24h_approx": 14879196.35,
-      "ticker_time_bj": "2026-10-29T03:34:27+08:00",
+      "turnover_usdt_24h_approx": 15147722.03,
+      "ticker_time_bj": "2026-10-29T03:49:27+08:00",
       "five_minute_structure": {
         "status": "break_watch",
         "confirmed": false,
-        "atr14": 0.0422857143,
-        "latest_closed_bar": "2026-10-29T03:25:00+08:00",
+        "atr14": 0.0402857143,
+        "latest_closed_bar": "2026-10-29T03:40:00+08:00",
         "last_pivot_high": 8.974,
         "last_pivot_low": 8.898,
         "side": "long",
-        "break_bar": "2026-10-29T02:35:00+08:00",
-        "break_level": 8.912,
-        "bars_since_break": 10,
-        "retest_touched": true,
+        "break_bar": "2026-10-29T03:40:00+08:00",
+        "break_level": 8.974,
+        "bars_since_break": 0,
+        "retest_touched": false,
         "retest_pivot_confirmed": false,
-        "structure_hl_lh": true,
+        "structure_hl_lh": false,
         "regained_level": true,
         "structure_label": "rule_confirmed_break_and_retest_not_BOS_CHoCH"
       },
       "five_minute_candles": [
-        {
-          "time": "2026-10-28T22:30:00+08:00",
-          "open": 8.801,
-          "high": 8.826,
-          "low": 8.801,
-          "close": 8.812,
-          "quote_volume": 89421.6761
-        },
-        {
-          "time": "2026-10-28T22:35:00+08:00",
-          "open": 8.811,
-          "high": 8.823,
-          "low": 8.805,
-          "close": 8.823,
-          "quote_volume": 41808.498
-        },
-        {
-          "time": "2026-10-28T22:40:00+08:00",
-          "open": 8.822,
-          "high": 8.832,
-          "low": 8.818,
-          "close": 8.822,
-          "quote_volume": 44791.9835
-        },
         {
           "time": "2026-10-28T22:45:00+08:00",
           "open": 8.821,
@@ -10559,6 +10544,30 @@
           "low": 8.934,
           "close": 8.948,
           "quote_volume": 73072.2953
+        },
+        {
+          "time": "2026-10-29T03:30:00+08:00",
+          "open": 8.949,
+          "high": 8.977,
+          "low": 8.948,
+          "close": 8.968,
+          "quote_volume": 33141.1525
+        },
+        {
+          "time": "2026-10-29T03:35:00+08:00",
+          "open": 8.967,
+          "high": 8.969,
+          "low": 8.945,
+          "close": 8.945,
+          "quote_volume": 41571.8704
+        },
+        {
+          "time": "2026-10-29T03:40:00+08:00",
+          "open": 8.945,
+          "high": 8.98,
+          "low": 8.939,
+          "close": 8.979,
+          "quote_volume": 44137.0506
         }
       ]
     },
@@ -10567,21 +10576,21 @@
       "priority": "extra",
       "intervals": {
         "5m": {
-          "bar_time_bj": "2026-10-29T03:25:00+08:00",
-          "closed_candle_close": 0.9411,
-          "ema20": 0.9352093215,
-          "ema50": 0.9305778332,
-          "atr14": 0.0055928571,
-          "bb20_upper": 0.9473333866,
-          "bb20_middle": 0.933915,
-          "bb20_lower": 0.9204966134,
-          "bb_width_pct": 2.8736,
-          "bb_upper_change_pct_of_price_per_bar": 0.085374,
-          "bb_lower_change_pct_of_price_per_bar": 0.065514,
+          "bar_time_bj": "2026-10-29T03:40:00+08:00",
+          "closed_candle_close": 0.9453,
+          "ema20": 0.9372579114,
+          "ema50": 0.9320321467,
+          "atr14": 0.0054071429,
+          "bb20_upper": 0.9497988219,
+          "bb20_middle": 0.936165,
+          "bb20_lower": 0.9225311781,
+          "bb_width_pct": 2.9127,
+          "bb_upper_change_pct_of_price_per_bar": 0.129676,
+          "bb_lower_change_pct_of_price_per_bar": 0.012078,
           "bb_expanding": false,
           "bb_uptrend_expansion": true,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.417,
+          "volume_ratio_vs_prior20": 0.649,
           "last_pivots": [
             {
               "type": "H",
@@ -10644,9 +10653,9 @@
               "time": "2026-10-29T02:40:00+08:00"
             }
           ],
-          "recent_swing_high": 0.9439,
+          "recent_swing_high": 0.9447,
           "recent_swing_low": 0.9229,
-          "close_above_prior20_high": false,
+          "close_above_prior20_high": true,
           "close_below_prior20_low": false,
           "latest_pivot_highs": [
             {
@@ -10676,21 +10685,21 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         },
         "15m": {
-          "bar_time_bj": "2026-10-29T03:15:00+08:00",
-          "closed_candle_close": 0.9411,
-          "ema20": 0.9303820161,
-          "ema50": 0.9305698756,
-          "atr14": 0.0067714286,
-          "bb20_upper": 0.9406388479,
-          "bb20_middle": 0.92762,
-          "bb20_lower": 0.9146011521,
-          "bb_width_pct": 2.8069,
-          "bb_upper_change_pct_of_price_per_bar": 0.220755,
-          "bb_lower_change_pct_of_price_per_bar": 0.024703,
-          "bb_expanding": false,
-          "bb_uptrend_expansion": true,
+          "bar_time_bj": "2026-10-29T03:30:00+08:00",
+          "closed_candle_close": 0.9453,
+          "ema20": 0.9318029059,
+          "ema50": 0.9311970654,
+          "atr14": 0.0068857143,
+          "bb20_upper": 0.943513503,
+          "bb20_middle": 0.928885,
+          "bb20_lower": 0.914256497,
+          "bb_width_pct": 3.1497,
+          "bb_upper_change_pct_of_price_per_bar": 0.3041,
+          "bb_lower_change_pct_of_price_per_bar": -0.03646,
+          "bb_expanding": true,
+          "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.735,
+          "volume_ratio_vs_prior20": 0.842,
           "last_pivots": [
             {
               "type": "L",
@@ -10753,9 +10762,9 @@
               "time": "2026-10-29T00:45:00+08:00"
             }
           ],
-          "recent_swing_high": 0.9436,
-          "recent_swing_low": 0.9164,
-          "close_above_prior20_high": false,
+          "recent_swing_high": 0.9439,
+          "recent_swing_low": 0.9176,
+          "close_above_prior20_high": true,
           "close_below_prior20_low": false,
           "latest_pivot_highs": [
             {
@@ -11112,54 +11121,30 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         }
       },
-      "last_price": 0.9425,
-      "price_change_pct_24h": 1.7929,
-      "high_24h": 0.9479,
+      "last_price": 0.9488,
+      "price_change_pct_24h": 2.4069,
+      "high_24h": 0.9491,
       "low_24h": 0.9164,
-      "turnover_usdt_24h_approx": 57009624.26,
-      "ticker_time_bj": "2026-10-29T03:34:29+08:00",
+      "turnover_usdt_24h_approx": 58017130.37,
+      "ticker_time_bj": "2026-10-29T03:49:27+08:00",
       "five_minute_structure": {
         "status": "break_watch",
         "confirmed": false,
-        "atr14": 0.0055928571,
-        "latest_closed_bar": "2026-10-29T03:25:00+08:00",
+        "atr14": 0.0054071429,
+        "latest_closed_bar": "2026-10-29T03:40:00+08:00",
         "last_pivot_high": 0.9436,
         "last_pivot_low": 0.9232,
         "side": "long",
-        "break_bar": "2026-10-29T02:35:00+08:00",
-        "break_level": 0.9368,
-        "bars_since_break": 10,
-        "retest_touched": true,
+        "break_bar": "2026-10-29T03:40:00+08:00",
+        "break_level": 0.9436,
+        "bars_since_break": 0,
+        "retest_touched": false,
         "retest_pivot_confirmed": false,
         "structure_hl_lh": false,
         "regained_level": true,
         "structure_label": "rule_confirmed_break_and_retest_not_BOS_CHoCH"
       },
       "five_minute_candles": [
-        {
-          "time": "2026-10-28T22:30:00+08:00",
-          "open": 0.9179,
-          "high": 0.9203,
-          "low": 0.9179,
-          "close": 0.9189,
-          "quote_volume": 231827.179
-        },
-        {
-          "time": "2026-10-28T22:35:00+08:00",
-          "open": 0.9189,
-          "high": 0.9198,
-          "low": 0.9176,
-          "close": 0.9198,
-          "quote_volume": 138012.2552
-        },
-        {
-          "time": "2026-10-28T22:40:00+08:00",
-          "open": 0.9199,
-          "high": 0.9216,
-          "low": 0.9197,
-          "close": 0.92,
-          "quote_volume": 163021.7869
-        },
         {
           "time": "2026-10-28T22:45:00+08:00",
           "open": 0.9199,
@@ -11615,6 +11600,30 @@
           "low": 0.9389,
           "close": 0.9411,
           "quote_volume": 200501.3737
+        },
+        {
+          "time": "2026-10-29T03:30:00+08:00",
+          "open": 0.9412,
+          "high": 0.9447,
+          "low": 0.9408,
+          "close": 0.9432,
+          "quote_volume": 246167.5169
+        },
+        {
+          "time": "2026-10-29T03:35:00+08:00",
+          "open": 0.9432,
+          "high": 0.9436,
+          "low": 0.9404,
+          "close": 0.9406,
+          "quote_volume": 112151.1235
+        },
+        {
+          "time": "2026-10-29T03:40:00+08:00",
+          "open": 0.9406,
+          "high": 0.9457,
+          "low": 0.9398,
+          "close": 0.9453,
+          "quote_volume": 310537.6013
         }
       ]
     },
@@ -11623,27 +11632,22 @@
       "priority": "extra",
       "intervals": {
         "5m": {
-          "bar_time_bj": "2026-10-29T03:25:00+08:00",
-          "closed_candle_close": 750.78,
-          "ema20": 750.2789867265,
-          "ema50": 750.0217988899,
-          "atr14": 1.6228571429,
-          "bb20_upper": 752.6662652646,
-          "bb20_middle": 750.097,
-          "bb20_lower": 747.5277347354,
-          "bb_width_pct": 0.685,
-          "bb_upper_change_pct_of_price_per_bar": 0.009269,
-          "bb_lower_change_pct_of_price_per_bar": 0.005915,
-          "bb_expanding": false,
-          "bb_uptrend_expansion": true,
+          "bar_time_bj": "2026-10-29T03:40:00+08:00",
+          "closed_candle_close": 752.68,
+          "ema20": 750.747121943,
+          "ema50": 750.2724120366,
+          "atr14": 1.5792857143,
+          "bb20_upper": 753.3444321178,
+          "bb20_middle": 750.47,
+          "bb20_lower": 747.5955678822,
+          "bb_width_pct": 0.766,
+          "bb_upper_change_pct_of_price_per_bar": 0.041769,
+          "bb_lower_change_pct_of_price_per_bar": -0.006162,
+          "bb_expanding": true,
+          "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.178,
+          "volume_ratio_vs_prior20": 0.25,
           "last_pivots": [
-            {
-              "type": "L",
-              "price": 748.5,
-              "time": "2026-10-28T23:30:00+08:00"
-            },
             {
               "type": "H",
               "price": 750.06,
@@ -11698,6 +11702,11 @@
               "type": "L",
               "price": 749.31,
               "time": "2026-10-29T02:55:00+08:00"
+            },
+            {
+              "type": "H",
+              "price": 752.45,
+              "time": "2026-10-29T03:20:00+08:00"
             }
           ],
           "recent_swing_high": 753.0,
@@ -11707,13 +11716,13 @@
           "latest_pivot_highs": [
             {
               "type": "H",
-              "price": 751.78,
-              "time": "2026-10-29T02:00:00+08:00"
+              "price": 753.0,
+              "time": "2026-10-29T02:35:00+08:00"
             },
             {
               "type": "H",
-              "price": 753.0,
-              "time": "2026-10-29T02:35:00+08:00"
+              "price": 752.45,
+              "time": "2026-10-29T03:20:00+08:00"
             }
           ],
           "latest_pivot_lows": [
@@ -11728,25 +11737,25 @@
               "time": "2026-10-29T02:55:00+08:00"
             }
           ],
-          "structure_hint": "HH / HL",
+          "structure_hint": "LH / HL",
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         },
         "15m": {
-          "bar_time_bj": "2026-10-29T03:15:00+08:00",
-          "closed_candle_close": 750.78,
-          "ema20": 749.9526215701,
-          "ema50": 750.0403963113,
-          "atr14": 2.2835714286,
-          "bb20_upper": 751.5808037521,
-          "bb20_middle": 749.1675,
-          "bb20_lower": 746.7541962479,
-          "bb_width_pct": 0.6443,
-          "bb_upper_change_pct_of_price_per_bar": 0.026249,
-          "bb_lower_change_pct_of_price_per_bar": 0.013709,
-          "bb_expanding": false,
-          "bb_uptrend_expansion": true,
+          "bar_time_bj": "2026-10-29T03:30:00+08:00",
+          "closed_candle_close": 752.68,
+          "ema20": 750.2123241254,
+          "ema50": 750.1256192542,
+          "atr14": 2.3407142857,
+          "bb20_upper": 752.1778355,
+          "bb20_middle": 749.415,
+          "bb20_lower": 746.6521645,
+          "bb_width_pct": 0.7373,
+          "bb_upper_change_pct_of_price_per_bar": 0.079321,
+          "bb_lower_change_pct_of_price_per_bar": -0.013556,
+          "bb_expanding": true,
+          "bb_uptrend_expansion": false,
           "bb_downtrend_expansion": false,
-          "volume_ratio_vs_prior20": 0.903,
+          "volume_ratio_vs_prior20": 0.384,
           "last_pivots": [
             {
               "type": "H",
@@ -12168,54 +12177,30 @@
           "warning": "Structure is heuristic, not confirmed BOS/CHoCH or executable signals. BB values are price slopes, not visual angles."
         }
       },
-      "last_price": 751.97,
-      "price_change_pct_24h": 0.4891,
+      "last_price": 753.19,
+      "price_change_pct_24h": 0.5675,
       "high_24h": 762.04,
       "low_24h": 741.54,
-      "turnover_usdt_24h_approx": 51062786.04,
-      "ticker_time_bj": "2026-10-29T03:34:29+08:00",
+      "turnover_usdt_24h_approx": 51292653.25,
+      "ticker_time_bj": "2026-10-29T03:49:29+08:00",
       "five_minute_structure": {
         "status": "break_watch",
         "confirmed": false,
-        "atr14": 1.6228571429,
-        "latest_closed_bar": "2026-10-29T03:25:00+08:00",
-        "last_pivot_high": 752.38,
-        "last_pivot_low": 749.31,
+        "atr14": 1.5792857143,
+        "latest_closed_bar": "2026-10-29T03:40:00+08:00",
+        "last_pivot_high": 752.45,
+        "last_pivot_low": 750.29,
         "side": "long",
-        "break_bar": "2026-10-29T02:00:00+08:00",
-        "break_level": 749.76,
-        "bars_since_break": 17,
-        "retest_touched": true,
+        "break_bar": "2026-10-29T03:40:00+08:00",
+        "break_level": 752.45,
+        "bars_since_break": 0,
+        "retest_touched": false,
         "retest_pivot_confirmed": false,
-        "structure_hl_lh": true,
+        "structure_hl_lh": false,
         "regained_level": true,
         "structure_label": "rule_confirmed_break_and_retest_not_BOS_CHoCH"
       },
       "five_minute_candles": [
-        {
-          "time": "2026-10-28T22:30:00+08:00",
-          "open": 747.77,
-          "high": 748.86,
-          "low": 747.67,
-          "close": 748.13,
-          "quote_volume": 263796.2643
-        },
-        {
-          "time": "2026-10-28T22:35:00+08:00",
-          "open": 748.11,
-          "high": 748.38,
-          "low": 747.3,
-          "close": 747.83,
-          "quote_volume": 185816.9401
-        },
-        {
-          "time": "2026-10-28T22:40:00+08:00",
-          "open": 747.82,
-          "high": 748.38,
-          "low": 747.66,
-          "close": 747.73,
-          "quote_volume": 222526.2634
-        },
         {
           "time": "2026-10-28T22:45:00+08:00",
           "open": 747.73,
@@ -12671,6 +12656,30 @@
           "low": 750.29,
           "close": 750.78,
           "quote_volume": 52377.6378
+        },
+        {
+          "time": "2026-10-29T03:30:00+08:00",
+          "open": 750.84,
+          "high": 752.25,
+          "low": 750.8,
+          "close": 752.1,
+          "quote_volume": 86707.9351
+        },
+        {
+          "time": "2026-10-29T03:35:00+08:00",
+          "open": 752.15,
+          "high": 752.15,
+          "low": 751.25,
+          "close": 751.41,
+          "quote_volume": 49231.6853
+        },
+        {
+          "time": "2026-10-29T03:40:00+08:00",
+          "open": 751.4,
+          "high": 752.72,
+          "low": 751.3,
+          "close": 752.68,
+          "quote_volume": 64129.7056
         }
       ]
     }
