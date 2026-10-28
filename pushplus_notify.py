@@ -99,6 +99,23 @@ def build(snapshot, stamp):
                    (r["sym"], r["side"], r["quality"], r["score"], details, r["atr_pct"]))
         out.append("  15m参考高/低：%s / %s USDT。仅作观察；尚未证实BOS/CHoCH及突破回踩。" %
                    (r["resistance"], r["support"]))
+    out += ["", "### 5分钟突破与回踩确认（仅限采集时点）"]
+    found = False
+    for sym in CORE:
+        q = snapshot["symbols"][sym + "USDT"].get("five_minute_structure")
+        if not q or q.get("status") == "insufficient_pivots":
+            continue
+        if q.get("status") not in ("break_watch", "retest_confirmed"):
+            continue
+        found = True
+        side = "做多观察" if q.get("side") == "long" else "做空观察"
+        label = "突破回踩结构初步确认" if q.get("confirmed") else "突破后等待回踩确认"
+        out.append("- **%s %s**：%s；5m关键结构位 %s，最近已收盘K线 %s。" %
+                   (sym, side, label, q.get("break_level"), q.get("latest_closed_bar")))
+        if q.get("confirmed"):
+            out.append("  已满足程序定义的触及回踩区、局部HL/LH确认及重返结构位；仍需15m趋势、量能及扣费后盈亏比验证，不是实时买卖指令。")
+    if not found:
+        out.append("最近5分钟K线没有形成符合程序定义的突破回踩观察线索。")
     out += ["", "**交易结论：暂不交易，不挂单。** 需更新K线核验突破、回踩形成HL/LH、重新放量及合理止损后才能制定方案。",
             "布林外扩不是视觉20°；结构标签仅为程序提示。ATR用于过滤异常波动，不能保证风险。",
             "本金参考100U；单笔预估损失≤1U，同时总风险≤2U（含手续费及滑点）；不自动交易。",
