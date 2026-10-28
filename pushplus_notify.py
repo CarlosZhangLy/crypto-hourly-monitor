@@ -1,48 +1,126 @@
-import json, os
+#!/usr/bin/env python3
+"""Rule-based OKX research digest for PushPlus. Read only, no order execution."""
+import json
+import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.request import Request, urlopen
 
 CORE = ("BTC", "ETH", "SOL", "XRP", "LTC", "ADA", "BCH", "LINK")
 PERIODS = {"5m": 5, "15m": 15, "1h": 60, "4h": 240, "1d": 1440}
+BJ = timezone(timedelta(hours=8))
+
+def check(snapshot, now=None):
+    now = now or datetime.now(BJ)
+    stamp = datetime.fromisoformat(snapshot["generated_beijing"])
+    if stamp.tzinfo is None or not timedelta(0) <= now - stamp <= timedelta(minutes=45):
+        raise ValueError("Invalid or expired GitHub snapshot")
+    if snapshot.get("errors"):
+        raise ValueError("Collector has errors; no trade-oriented summary")
+    if not str(snapshot.get("source", "")).startswith("OKX"):
+        raise ValueError("Unexpected data source")
+    for sym in CORE:
+        x = snapshot["symbols"][sym + "USDT"]
+        tick = datetime.fromisoformat(x["ticker_time_bj"])
+        if tick.tzinfo is None or abs((stamp - tick).total_seconds()) > 900:
+            raise ValueError(sym + " stale ticker")
+        for p, length in PERIODS.items():
+            c = x["intervals"][p]
+            start = datetime.fromisoformat(c["bar_time_bj"])
+            if start.tzinfo is None:
+                raise ValueError(sym + " missing candle timezone")
+            end = start + timedelta(minutes=length)
+            if end > stamp or stamp - end > timedelta(minutes=max(30, length)):
+                raise ValueError(sym + " " + p + " missing recent closed candle")
+            for k in ("ema20", "ema50", "atr14", "volume_ratio_vs_prior20", "recent_swing_high", "recent_swing_low"):
+                if k not in c:
+                    raise ValueError(sym + " " + p + " missing " + k)
+    return stamp
+
+def evaluate(sym, x):
+    a = x["intervals"]
+    m5, m15, h1, h4, day = [a[k] for k in ("5m", "15m", "1h", "4h", "1d")]
+    price = float(x["last_price"])
+    trend = [h1["ema20"] > h1["ema50"], h4["ema20"] > h4["ema50"], day["ema20"] > day["ema50"]]
+    trend_count = sum(trend)
+    direction = "偏多" if trend_count == 3 else "偏空" if trend_count == 0 else "震荡/分歧"
+    atr_pct = 100 * m15["atr14"] / max(price, 1e-12)
+    vol = m15["volume_ratio_vs_prior20"]
+    bull_break = bool(m15["close_above_prior20_high"] or h1["close_above_prior20_high"])
+    bear_break = bool(m15["close_below_prior20_low"] or h1["close_below_prior20_low"])
+    bb_bull = bool(m15["bb_expanding"] and price >= m15["bb20_middle"])
+    bb_bear = bool(m15["bb_expanding"] and price < m15["bb20_middle"])
+    recent_support = float(m15["recent_swing_low"])
+    recent_resistance = float(m15["recent_swing_high"])
+    # Approximate proximity is a WATCH clue, not evidence of a completed retest.
+    support_near = 0 <= price - recent_support <= 0.8 * m15["atr14"]
+    resistance_near = 0 <= recent_resistance - price <= 0.8 * m15["atr14"]
+    # Independent factors: higher timeframe direction, trigger, liquidity and volatility.
+    long_score = sum((trend_count >= 2, m15["ema20"] > m15["ema50"], bull_break, bb_bull, vol >= 1.3, support_near))
+    short_score = sum((trend_count <= 1, m15["ema20"] < m15["ema50"], bear_break, bb_bear, vol >= 1.3, resistance_near))
+    if long_score > short_score:
+        side, score = "多头观察", long_score
+    elif short_score > long_score:
+        side, score = "空头观察", short_score
+    else:
+        side, score = "方向未定", long_score
+    flags = []
+    if bull_break: flags.append("收盘突破前20根高点")
+    if bear_break: flags.append("收盘跌破前20根低点")
+    if m15["bb_expanding"]: flags.append("15m布林外扩")
+    if vol >= 1.3: flags.append("15m量比%.2f" % vol)
+    if support_near: flags.append("接近15m支撑")
+    if resistance_near: flags.append("接近15m阻力")
+    if atr_pct >= 1.8: flags.append("短线波动偏高")
+    # Never assert BOS/CHoCH or a confirmed pullback from heuristic pivot arrays.
+    quality = "重点观察" if score >= 4 and vol >= 1.2 and atr_pct < 1.8 else "一般观察" if score >= 3 else "暂不交易"
+    return dict(sym=sym, price=price, pct=float(x["price_change_pct_24h"]),
+                direction=direction, side=side, score=score, quality=quality,
+                flags=flags, support=recent_support, resistance=recent_resistance,
+                atr_pct=atr_pct, hint=m15["structure_hint"])
+
+def build(snapshot, stamp):
+    records = [evaluate(s, snapshot["symbols"][s+"USDT"]) for s in CORE]
+    out = ["## OKX多指标综合监测 %s" % stamp.strftime("%m-%d %H:%M"),
+           "行情：OKX USDT永续；仅已收盘K线。规则筛选，非AI回复。",
+           "", "|币种|快照价|24h|趋势|观察方向|",
+           "|---|---:|---:|---|---|"]
+    for r in records:
+        out.append("|%s|%s|%+.2f%%|%s|%s|" %
+                   (r["sym"], format(r["price"], ".5g"), r["pct"], r["direction"], r["side"]))
+    watch = sorted((r for r in records if r["quality"] != "暂不交易"),
+                   key=lambda r: (r["quality"] == "重点观察", r["score"]), reverse=True)[:2]
+    out += ["", "### 综合筛选优先观察（最多2个）"]
+    if not watch:
+        out.append("无满足多因素条件的候选，暂不交易。")
+    for r in watch:
+        details = "、".join(r["flags"][:4]) or "尚缺少成交量/突破确认"
+        out.append("- **%s %s｜%s**：综合因子%d/6；%s；15m波动ATR/价约%.2f%%。" %
+                   (r["sym"], r["side"], r["quality"], r["score"], details, r["atr_pct"]))
+        out.append("  15m参考高/低：%s / %s USDT。仅作观察；尚未证实BOS/CHoCH及突破回踩。" %
+                   (r["resistance"], r["support"]))
+    out += ["", "**交易结论：暂不交易，不挂单。** 需更新K线核验突破、回踩形成HL/LH、重新放量及合理止损后才能制定方案。",
+            "布林外扩不是视觉20°；结构标签仅为程序提示。ATR用于过滤异常波动，不能保证风险。",
+            "本金参考100U；单笔预估损失≤1U，同时总风险≤2U（含手续费及滑点）；不自动交易。",
+            "[GitHub行情数据](https://github.com/CarlosZhangly/crypto-hourly-monitor/blob/main/data/latest.md)"]
+    return "\n".join(out)
 
 def main():
-    data = json.loads(Path("data/latest.json").read_text(encoding="utf-8"))
-    now = datetime.now(timezone(timedelta(hours=8)))
-    stamp = datetime.fromisoformat(data["generated_beijing"])
-    if not timedelta(0) <= now - stamp <= timedelta(minutes=45) or data.get("errors"):
-        raise ValueError("Snapshot too old or errors found")
-    lines = [f"## OKX行情摘要 {stamp:%m-%d %H:%M}", "", "|币种|快照价|24h|15m结构|均线方向|", "|---|---:|---:|---|---|"]
-    for sym in CORE:
-        x = data["symbols"][sym + "USDT"]
-        ticker = datetime.fromisoformat(x["ticker_time_bj"])
-        if abs((stamp - ticker).total_seconds()) > 900:
-            raise ValueError(sym + " ticker stale")
-        periods = x["intervals"]
-        for p, minutes in PERIODS.items():
-            end = datetime.fromisoformat(periods[p]["bar_time_bj"]) + timedelta(minutes=minutes)
-            if end > stamp or stamp - end > timedelta(minutes=max(minutes, 30)):
-                raise ValueError(sym + " " + p + " candle invalid")
-        t = periods["15m"]
-        alignment = [periods[p]["ema20"] > periods[p]["ema50"] for p in ("15m", "1h", "4h")]
-        direction = "偏强" if all(alignment) else "偏弱" if not any(alignment) else "分歧"
-        lines.append(f"|{sym}|{x['last_price']}|{x['price_change_pct_24h']:+.2f}%|{t['structure_hint']}|{direction}|")
-    lines += ["", "### 重点观察（规则筛选）"]
-    for sym in CORE:
-        t = data["symbols"][sym + "USDT"]["intervals"]["15m"]
-        if t["bb_expanding"] and t["volume_ratio_vs_prior20"] >= 1.5:
-            lines.append(f"- {sym}：15m布林扩张，量比{t['volume_ratio_vs_prior20']:.2f}")
-    lines += ["", "**结论：暂不交易。** 程序结构提示非确认的BOS/CHoCH；不生成自动委托。", "参考本金100U，单笔风险≤1U、总风险≤2U。", "OKX历史快照，仅供观察。"]
-    token = os.environ.get("PUSHPLUS_TOKEN")
+    token = os.environ.get("PUSHPLUS_TOKEN", "").strip()
     if not token:
-        raise ValueError("PUSHPLUS_TOKEN missing")
-    payload = {"token": token, "title": f"OKX每小时行情 {stamp:%H:%M}", "content": "\n".join(lines), "template": "markdown", "channel": "wechat"}
-    req = Request("https://www.pushplus.plus/send", data=json.dumps(payload, ensure_ascii=False).encode(), headers={"Content-Type":"application/json"}, method="POST")
+        raise ValueError("Missing PUSHPLUS_TOKEN secret")
+    snapshot = json.loads(Path("data/latest.json").read_text(encoding="utf-8"))
+    stamp = check(snapshot)
+    body = {"token": token, "title": "OKX综合监测 %s｜暂不交易" % stamp.strftime("%H:%M"),
+            "content": build(snapshot, stamp), "template": "markdown", "channel": "wechat"}
+    req = Request("https://www.pushplus.plus/send",
+                  data=json.dumps(body, ensure_ascii=False).encode("utf-8"),
+                  headers={"Content-Type": "application/json"}, method="POST")
     with urlopen(req, timeout=20) as response:
         result = json.load(response)
     if result.get("code") != 200:
-        raise RuntimeError(f"PushPlus rejected: {result.get('code')} {result.get('msg')}")
-    print("PushPlus accepted the summary. Check WeChat delivery.")
+        raise RuntimeError("PushPlus API error: %s" % result.get("msg"))
+    print("PushPlus accepted rule-based digest; receipt should be checked in WeChat.")
 
 if __name__ == "__main__":
     main()
