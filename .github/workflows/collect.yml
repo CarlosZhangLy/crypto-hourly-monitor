@@ -23,11 +23,40 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add data/latest.json data/latest.md
-          if ! git diff --cached --quiet; then
+          cp data/latest.json /tmp/market-latest.json
+          cp data/latest.md /tmp/market-latest.md
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          new = json.loads(Path("/tmp/market-latest.json").read_text(encoding="utf-8"))
+          path = Path("data/latest.json")
+          old = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+          if new.get("generated_utc", "") > old.get("generated_utc", ""):
+              path.write_bytes(Path("/tmp/market-latest.json").read_bytes())
+              Path("data/latest.md").write_bytes(Path("/tmp/market-latest.md").read_bytes())
+              print("Newer snapshot staged")
+          else:
+              print("Remote snapshot is as recent or newer; leave it intact")
+          PY
+            git add data/latest.json data/latest.md
+            if git diff --cached --quiet; then
+              echo "No newer snapshot to commit"
+              break
+            fi
             git commit -m 'Update market snapshot'
-            git push
-          fi
+            if git push origin HEAD:main; then
+              echo "Snapshot published"
+              break
+            fi
+            if [ "$attempt" = 3 ]; then
+              echo "Failed to publish after retries"
+              exit 1
+            fi
+            sleep 2
+          done
 
       - name: Send PushPlus WeChat summary
         continue-on-error: true
@@ -53,8 +82,14 @@ jobs:
       - name: Persist alert state
         if: always()
         run: |
-          git add data/signal_state.json 2>/dev/null || true
-          if ! git diff --cached --quiet; then
-            git commit -m 'Update 15m signal notification state'
-            git push
+          if [ -f data/signal_state.json ]; then
+            cp data/signal_state.json /tmp/signal-state.json
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/signal-state.json data/signal_state.json
+            git add data/signal_state.json
+            if ! git diff --cached --quiet; then
+              git commit -m 'Update signal notification state'
+              git push origin HEAD:main || echo 'Alert state push collided; next run will retry'
+            fi
           fi
