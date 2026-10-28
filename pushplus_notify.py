@@ -4,6 +4,7 @@ import json
 import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from risk_calc import fetch_specs, plan
 from urllib.request import Request, urlopen
 
 CORE = ("BTC", "ETH", "SOL", "XRP", "LTC", "ADA", "BCH", "LINK")
@@ -126,6 +127,25 @@ def build(snapshot, stamp):
                    (r["sym"], r["side"], r["quality"], r["score"], details, r["atr_pct"]))
         out.append("  15m参考高/低：%s / %s USDT。仅作观察；尚未证实BOS/CHoCH及突破回踩。" %
                    (r["resistance"], r["support"]))
+    out += ["", "### OKX合约张数与风险收益测算（条件预案）"]
+    try:
+        specifications=fetch_specs([x+"-USDT-SWAP" for x in CORE])
+        plans=[]
+        for sym in CORE:
+            spec=specifications.get(sym+"-USDT-SWAP")
+            if spec:
+                result=plan(snapshot["symbols"][sym+"USDT"],spec)
+                if result:plans.append((sym,result))
+        plans.sort(key=lambda t:t[1]["rr"],reverse=True)
+        if not plans:out.append("本期无同时满足结构、趋势、成交量、1U风险上限及净盈亏比≥1.8的候选。")
+        for sym,r in plans[:2]:
+            out.append("- **%s %s头条件预案**：参考入场 %s，止损 %s，止盈 %s USDT，净盈亏比 %.2f:1。" %
+                       (sym,r["direction"],r["entry"],r["stop"],r["target"],r["rr"]))
+            out.append("  OKX合约张数 %s 张（每张面值 %s），2倍逐仓，名义仓位 %.2fU，保证金约 %.2fU；含交易成本预估风险 %.2fU，净目标收益 %.2fU。" %
+                       (r["contracts"],r["ctVal"],r["notional"],r["margin"],r["risk"],r["gain"]))
+            out.append("  采集后15分钟失效；价格突破结构失效点、未回踩或盈亏比下降则放弃。提交订单前复核当前行情、保证金模式、资金费率、实际手续费和合约规则。")
+    except Exception as exc:
+        out.append("OKX合约规格实时校验失败：本期不提供张数或限价预案（%s）。" % type(exc).__name__)
     out += ["", "### 5分钟突破与回踩确认（仅限采集时点）"]
     found = False
     for sym in CORE:
