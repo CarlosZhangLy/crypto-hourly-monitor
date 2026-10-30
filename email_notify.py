@@ -4,7 +4,7 @@ import json
 import os
 import smtplib
 import ssl
-import hashlib
+from ai_report import generate as ai_generate
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 from pathlib import Path
@@ -48,15 +48,40 @@ def run():
     previous=json.loads(STATE.read_text(encoding="utf-8")) if STATE.exists() else {}
     state=dict(previous)
     # Email one digest per Beijing hour, on the :34 collection (not on 15-minute collections).
-    if 34<=now.minute<=43:
+    if 34<=now.minute<=48:
         hour_key=stamp.strftime("%Y-%m-%d %H")
         if previous.get("digest_hour")!=hour_key:
-            text=build(data,stamp)
-            send("【OKX行情分析·规则版】%s｜8币行情与风控" % stamp.strftime("%m-%d %H:%M"),text+
-                 "\n\n说明：此邮件由GitHub行情规则自动生成，并非ChatGPT大模型撰写的AI分析。")
+            try:
+                text=ai_generate(data)
+                title="【OKX AI行情分析】%s｜8币行情与风控" % stamp.strftime("%m-%d %H:%M")
+            except Exception as ex:
+                print("AI analysis unavailable; sending explicitly labelled rule report:",type(ex).__name__,str(ex)[:120])
+                text=build(data,stamp)
+                title="【OKX规则分析·AI未生成】%s｜8币行情与风控" % stamp.strftime("%m-%d %H:%M")
+            send(title,text)
             state["digest_hour"]=hour_key
-            print("Rule digest email accepted by SMTP.")
+            STATE.parent.mkdir(exist_ok=True)
+            STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+            print("Hourly report accepted by SMTP.")
     specs=fetch_specs([s+"-USDT-SWAP" for s in CORE])
+    # Expiration notices are advisory only: no OKX order-status/position API is connected.
+    alerted=dict(previous.get("alerted",{}))
+    for key,rec in list(alerted.items()):
+        if rec.get("notice_sent"): continue
+        expiry_s=rec.get("expiry")
+        if not expiry_s: continue
+        expiry=datetime.fromisoformat(expiry_s)
+        if now>=expiry:
+            name=rec.get("sym","未知"); direction=rec.get("direction","")
+            send("【OKX信号过期】%s %s｜未成交挂单请撤销" % (name,direction),
+                 "该交易信号已超过有效期：%s（北京时间）。\n如你在OKX挂了未成交的限价单，请自行检查并取消；"
+                 "如果已经成交，不要据此取消保护性止损。系统未连接你的订单或持仓，无法确认是否成交，也不会自动撤单。"
+                 % expiry.strftime("%Y-%m-%d %H:%M:%S"))
+            rec["notice_sent"]=True
+            state["alerted"]=alerted
+            STATE.parent.mkdir(exist_ok=True)
+            STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
+            print("Expiry advisory accepted by SMTP:",name)
     current={}
     candidates=[]
     for sym in CORE:
@@ -71,14 +96,13 @@ def run():
         if identity in previous.get("alerted",{}): continue
         candidates.append((sym,result,identity))
     candidates.sort(key=lambda v:v[1]["rr"],reverse=True)
-    alerted=dict(previous.get("alerted",{}))
     # No more than 2 recommendations per snapshot; cap persistent identity set.
     for sym,r,key in candidates[:2]:
         direction="开多" if r["direction"]=="多" else "开空"
         subject="【OKX交易信号】%s %s｜限价%s｜有效10分钟" % (sym,direction,r["entry"])
         expiry=stamp+timedelta(minutes=10)
         # At collection + GitHub workflow latency this may already be expired; never send stale actionable plans.
-        if now>=expiry: continue
+        if now>=expiry or (expiry-now).total_seconds()<120: continue
         body=("\n".join([
             "%s USDT永续｜%s｜逐仓2倍" % (sym,direction),
             "限价：%s USDT" % r["entry"],
@@ -97,7 +121,7 @@ def run():
         alerted[key]={"sym":sym,"direction":direction,"time":stamp.isoformat(),"expiry":expiry.isoformat()}
         state["alerted"]=alerted
         print("Trade email accepted by SMTP:",sym)
-    # Do not automatically claim signals cancelled based only on a no-signal snapshot;
+    # Never claim orders were cancelled: no account connection is present.
     # previously delivered limit orders need independent status checks on OKX.
     state["alerted"]=dict(list(alerted.items())[-100:])
     STATE.parent.mkdir(exist_ok=True)
