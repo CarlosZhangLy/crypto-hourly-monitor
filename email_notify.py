@@ -5,6 +5,7 @@ import os
 import smtplib
 import ssl
 from ai_report import generate as ai_generate
+import email_templates as templates
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 from pathlib import Path
@@ -18,7 +19,7 @@ STATE=Path("data/email_state.json")
 def configured():
     return all(os.environ.get(k,"").strip() for k in ("QQ_SMTP_USER","QQ_SMTP_AUTH_CODE","ALERT_TO"))
 
-def send(subject,content):
+def send(subject,content,html_body=None):
     sender=os.environ["QQ_SMTP_USER"].strip()
     password=os.environ["QQ_SMTP_AUTH_CODE"].strip()
     recipient=os.environ["ALERT_TO"].strip()
@@ -27,6 +28,8 @@ def send(subject,content):
     msg["To"]=recipient
     msg["Subject"]=subject
     msg.set_content(content)
+    if html_body:
+        msg.add_alternative(html_body,subtype="html")
     with smtplib.SMTP_SSL("smtp.qq.com",465,context=ssl.create_default_context(),timeout=20) as smtp:
         smtp.login(sender,password)
         smtp.send_message(msg)
@@ -42,7 +45,7 @@ def run():
         raise ValueError("Snapshot stale")
     if os.getenv("TEST_EMAIL","") == "1":
         send("【OKX邮件测试】GitHub Actions → QQ邮箱连接成功",
-             "这是一封由GitHub Actions主动发送的测试邮件。\n\n收到了这封邮件，说明QQ SMTP登录及邮箱投递已基本接通。\n正式交易信号仍需结构、仓位、盈亏比和有效期全部通过验证。\n")
+             "这是一封由GitHub Actions主动发送的测试邮件。\n\n收到了这封邮件，说明QQ SMTP登录及邮箱投递已基本接通。\n正式交易信号仍需结构、仓位、盈亏比和有效期全部通过验证。\n",templates.test())
         print("SMTP test email accepted by server.")
         return
     previous=json.loads(STATE.read_text(encoding="utf-8")) if STATE.exists() else {}
@@ -58,7 +61,7 @@ def run():
                 print("AI analysis unavailable; sending explicitly labelled rule report:",type(ex).__name__,str(ex)[:120])
                 text=build(data,stamp)
                 title="【OKX规则分析·AI未生成】%s｜8币行情与风控" % stamp.strftime("%m-%d %H:%M")
-            send(title,text)
+            send(title,text,templates.analysis(text,title))
             state["digest_hour"]=hour_key
             STATE.parent.mkdir(exist_ok=True)
             STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
@@ -75,7 +78,7 @@ def run():
             send("【OKX信号过期】%s %s｜未成交挂单请撤销" % (name,direction),
                  "该交易信号已超过有效期：%s（北京时间）。\n如你在OKX挂了未成交的限价单，请自行检查并取消；"
                  "如果已经成交，不要据此取消保护性止损。系统未连接你的订单或持仓，无法确认是否成交，也不会自动撤单。"
-                 % expiry.strftime("%Y-%m-%d %H:%M:%S"))
+                 % expiry.strftime("%Y-%m-%d %H:%M:%S"),templates.expiry(name,direction,expiry))
             rec["notice_sent"]=True
             state["alerted"]=alerted
             STATE.parent.mkdir(exist_ok=True)
@@ -117,7 +120,7 @@ def run():
             "到期未成交请撤单；价格脱离计划区间、结构失效或实盘盈亏比低于1.8时取消。",
             "发送时的数据不等于即时可成交价，请在OKX确认价格及实际资金费率。系统不自动下单。",
         ]))
-        send(subject,body)
+        send(subject,body,templates.trade(sym,direction,r,stamp,expiry))
         alerted[key]={"sym":sym,"direction":direction,"time":stamp.isoformat(),"expiry":expiry.isoformat()}
         state["alerted"]=alerted
         STATE.parent.mkdir(exist_ok=True)
