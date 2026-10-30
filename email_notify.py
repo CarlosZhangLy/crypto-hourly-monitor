@@ -63,7 +63,6 @@ def run():
             STATE.parent.mkdir(exist_ok=True)
             STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
             print("Hourly report accepted by SMTP.")
-    specs=fetch_specs([s+"-USDT-SWAP" for s in CORE])
     # Expiration notices are advisory only: no OKX order-status/position API is connected.
     alerted=dict(previous.get("alerted",{}))
     for key,rec in list(alerted.items()):
@@ -82,6 +81,7 @@ def run():
             STATE.parent.mkdir(exist_ok=True)
             STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
             print("Expiry advisory accepted by SMTP:",name)
+    specs=fetch_specs([s+"-USDT-SWAP" for s in CORE])
     current={}
     candidates=[]
     for sym in CORE:
@@ -120,6 +120,8 @@ def run():
         send(subject,body)
         alerted[key]={"sym":sym,"direction":direction,"time":stamp.isoformat(),"expiry":expiry.isoformat()}
         state["alerted"]=alerted
+        STATE.parent.mkdir(exist_ok=True)
+        STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
         print("Trade email accepted by SMTP:",sym)
     # Never claim orders were cancelled: no account connection is present.
     # previously delivered limit orders need independent status checks on OKX.
