@@ -1,6 +1,12 @@
 name: Collect OKX Futures Market Data
 on:
   workflow_dispatch:
+    inputs:
+      test_email:
+        description: 'Send one QQ SMTP test email (no trade signals)'
+        type: boolean
+        required: false
+        default: false
   schedule:
     - cron: '4,19,34,49 * * * *' # UTC, optional backup; external cron-job.org is primary
 permissions:
@@ -77,11 +83,11 @@ jobs:
           PY
 
       - name: Send separate QQ email digest and trade-only alerts
-        continue-on-error: true
         env:
           QQ_SMTP_USER: ${{ secrets.QQ_SMTP_USER }}
           QQ_SMTP_AUTH_CODE: ${{ secrets.QQ_SMTP_AUTH_CODE }}
           ALERT_TO: ${{ secrets.ALERT_TO }}
+          TEST_EMAIL: ${{ inputs.test_email == true && '1' || '0' }}
         run: python email_notify.py
 
       - name: Notify important 5-minute signal changes (legacy fallback)
