@@ -25,6 +25,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Validate notification code syntax
+        run: python -m py_compile email_notify.py ai_report.py risk_calc.py pushplus_notify.py
       - name: Fetch & calculate
         run: python collector.py
       - name: Publish latest snapshot
