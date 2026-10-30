@@ -10,6 +10,8 @@ concurrency:
   cancel-in-progress: false
 jobs:
   collect:
+    env:
+      QQ_SMTP_USER: ${{ secrets.QQ_SMTP_USER }}
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
@@ -59,7 +61,7 @@ jobs:
           done
 
       - name: Send PushPlus WeChat summary (legacy fallback)
-        if: ${{ secrets.QQ_SMTP_USER == '' }}
+        if: ${{ env.QQ_SMTP_USER == '' }}
         continue-on-error: true
         env:
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
@@ -83,7 +85,7 @@ jobs:
         run: python email_notify.py
 
       - name: Notify important 5-minute signal changes (legacy fallback)
-        if: ${{ secrets.QQ_SMTP_USER == '' }}
+        if: ${{ env.QQ_SMTP_USER == '' }}
         continue-on-error: true
         env:
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
