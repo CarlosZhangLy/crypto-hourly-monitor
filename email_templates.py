@@ -7,8 +7,7 @@ def esc(value):
 
 def inline(text):
     text=esc(text)
-    text=re.sub(r'\\*\\*(.+?)\\*\\*',r'<strong>\\1</strong>',text)
-    text=re.sub(r'\\[([^\\]]+)\\]\\((https?://[^ )]+)\\)',lambda m:'<a href="%s" style="color:#2563eb;text-decoration:none">%s</a>'%(m.group(2),m.group(1)),text)
+    text=re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
     return text
 
 def shell(title,eyebrow,body,color="#2563eb"):
