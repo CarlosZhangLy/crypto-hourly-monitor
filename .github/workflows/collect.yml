@@ -87,6 +87,8 @@ jobs:
           QQ_SMTP_USER: ${{ secrets.QQ_SMTP_USER }}
           QQ_SMTP_AUTH_CODE: ${{ secrets.QQ_SMTP_AUTH_CODE }}
           ALERT_TO: ${{ secrets.ALERT_TO }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_MODEL: gpt-5-mini
           TEST_EMAIL: ${{ inputs.test_email == true && '1' || '0' }}
         run: python email_notify.py
 
