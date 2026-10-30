@@ -40,6 +40,11 @@ def run():
     now=datetime.now(BJ)
     if not 0<= (now-stamp).total_seconds()<=45*60:
         raise ValueError("Snapshot stale")
+    if os.getenv("TEST_EMAIL","") == "1":
+        send("【OKX邮件测试】GitHub Actions → QQ邮箱连接成功",
+             "这是一封由GitHub Actions主动发送的测试邮件。\n\n收到了这封邮件，说明QQ SMTP登录及邮箱投递已基本接通。\n正式交易信号仍需结构、仓位、盈亏比和有效期全部通过验证。\n")
+        print("SMTP test email accepted by server.")
+        return
     previous=json.loads(STATE.read_text(encoding="utf-8")) if STATE.exists() else {}
     state=dict(previous)
     # Email one digest per Beijing hour, on the :34 collection (not on 15-minute collections).
