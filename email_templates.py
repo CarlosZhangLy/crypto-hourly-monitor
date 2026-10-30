@@ -23,29 +23,60 @@ def shell(title,eyebrow,body,color="#2563eb"):
 def section(title):
     return '<div style="font-size:16px;font-weight:700;color:#17243b;margin:24px 0 10px;border-left:4px solid #2563eb;padding-left:10px">'+inline(title)+'</div>'
 
+def _cells(line):
+    s=line.strip()
+    if s.startswith("|"):
+        s=s[1:]
+    if s.endswith("|"):
+        s=s[:-1]
+    return [x.strip() for x in s.split("|")]
+
+def _divider(line):
+    cells=_cells(line)
+    return len(cells)>=2 and all(re.fullmatch(r":?-{3,}:?",x.strip()) for x in cells)
+
+def _is_row(line, n):
+    return "|" in line and len(_cells(line))==n
+
 def render_markdown(text):
-    out=[];lines=text.splitlines();i=0
+    out=[]
+    lines=text.splitlines()
+    i=0
     while i<len(lines):
         s=lines[i].strip()
         if not s:
-            i+=1;continue
-        if s.startswith('|') and i+1<len(lines) and re.match(r'^\\|[\\s:|\\-]+\\|$',lines[i+1].strip()):
-            head=[v.strip() for v in s.strip('|').split('|')]
-            rows=[];i+=2
-            while i<len(lines) and lines[i].strip().startswith('|'):
-                rows.append([v.strip() for v in lines[i].strip().strip('|').split('|')]);i+=1
-            out.append('<table cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;font-size:13px;margin:12px 0 18px">')
-            out.append('<tr>'+''.join('<th style="text-align:left;background:#eef2f8;color:#334155;padding:10px 8px;border-bottom:1px solid #dce3ec">'+inline(x)+'</th>' for x in head)+'</tr>')
+            i+=1
+            continue
+        # Hide redundant methodology disclaimers; keep market conclusions and risk limits.
+        if s.startswith(("说明：","说明:")) and any(x in s for x in
+            ("structure_hint","本文所有数值","仅反映已收盘","不包含实时")):
+            i+=1
+            continue
+        if s in ("---","***","___"):
+            i+=1
+            continue
+        head=_cells(s) if "|" in s else []
+        if len(head)>=2 and i+1<len(lines) and _divider(lines[i+1]) and len(_cells(lines[i+1]))==len(head):
+            rows=[]
+            i+=2
+            while i<len(lines) and _is_row(lines[i].strip(),len(head)):
+                rows.append(_cells(lines[i]))
+                i+=1
+            out.append('<div style="width:100%;overflow-x:auto;margin:12px 0 18px"><table role="presentation" cellpadding="0" cellspacing="0" width="100%" style="border-collapse:collapse;font-size:13px;line-height:1.5">')
+            out.append('<tr>'+''.join('<th style="text-align:left;background:#eaf0f7;color:#25364b;padding:10px 8px;border-bottom:1px solid #d6dfeb;white-space:nowrap">'+inline(x)+'</th>' for x in head)+'</tr>')
             for n,row in enumerate(rows):
-                out.append('<tr style="background:%s">'%('#f8fafc' if n%2 else '#ffffff')+''.join('<td style="padding:10px 8px;border-bottom:1px solid #edf1f5">'+inline(row[j] if j<len(row) else '')+'</td>' for j in range(len(head)))+'</tr>')
-            out.append('</table>');continue
-        if s.startswith('#'):
-            out.append(section(s.lstrip('# ').strip()));i+=1;continue
-        if s.startswith('- ') or s.startswith('* '):
-            out.append('<div style="padding:4px 0 4px 10px;line-height:1.75;font-size:14px">• '+inline(s[2:])+'</div>');i+=1;continue
-        out.append('<div style="font-size:14px;line-height:1.85;margin:9px 0;color:#334155">'+inline(s)+'</div>')
+                out.append('<tr style="background:%s">' % ('#f5f8fc' if n%2 else '#ffffff')+
+                    ''.join('<td style="padding:9px 8px;border-bottom:1px solid #e8edf3;vertical-align:top;word-break:break-word">'+inline(x)+'</td>' for x in row)+'</tr>')
+            out.append('</table></div>')
+            continue
+        if s.startswith("#"):
+            out.append(section(s.lstrip("# ").strip()))
+        elif s.startswith("- ") or s.startswith("* "):
+            out.append('<div style="padding:4px 0 4px 10px;line-height:1.75;font-size:14px">• '+inline(s[2:])+'</div>')
+        else:
+            out.append('<div style="font-size:14px;line-height:1.85;margin:9px 0;color:#334155">'+inline(s)+'</div>')
         i+=1
-    return ''.join(out)
+    return "".join(out)
 
 def analysis(text, title):
     verdict='暂不交易' if '暂不交易' in text else '查看完整分析'
