@@ -17,12 +17,21 @@ def fetch_specs(symbols):
 
 def plan(x,spec):
     q=x.get("five_minute_structure") or {}
-    if not q.get("confirmed") or q.get("bars_since_break",99)>6:return None
+    if not q.get("confirmed") or q.get("bars_since_break",99)>12:return None
     side=q.get("side")
     if side not in ("long","short"):return None
     a=x["intervals"]; m=a["5m"]; t=a["15m"]; h=a["1h"]
-    aligned=(t["ema20"]>t["ema50"] and h["ema20"]>h["ema50"]) if side=="long" else (t["ema20"]<t["ema50"] and h["ema20"]<h["ema50"])
-    if not aligned or t["volume_ratio_vs_prior20"]<1.2:return None
+    # Two separate routes; position sizing and net R:R constraints remain unchanged.
+    trend15=(t["ema20"]>t["ema50"]) if side=="long" else (t["ema20"]<t["ema50"])
+    trend1h=(h["ema20"]>h["ema50"]) if side=="long" else (h["ema20"]<h["ema50"])
+    support1h=(h["closed_candle_close"]>h["ema20"]) if side=="long" else (h["closed_candle_close"]<h["ema20"])
+    vol15=t["volume_ratio_vs_prior20"]
+    vol5=m["volume_ratio_vs_prior20"]
+    if trend15 and trend1h and vol15>=0.8 and vol5>=1.0:
+        strategy="A-趋势延续"
+    elif trend15 and support1h and vol15>=1.5 and vol5>=1.5 and q.get("bars_since_break",99)<=8:
+        strategy="B-早期突破"
+    else:return None
     if spec.get("state")!="live" or spec.get("ctType")!="linear" or spec.get("settleCcy")!="USDT":return None
     px=D(x["last_price"]); atr=D(m["atr14"]); level=D(q["break_level"]); tick=D(spec["tickSz"])
     if not (px>0 and atr>0 and tick>0) or abs(px-level)>atr*D("1.5"):return None
@@ -47,7 +56,7 @@ def plan(x,spec):
     sz=floor_step(min(max_by_risk,max_by_margin),lotsz)
     if sz<minsz:return None
     notional=sz*ctval*entry; risk=sz*loss_per_contract
-    return {"direction":"多" if side=="long" else "空","entry":str(entry),"stop":str(stop),
+    return {"strategy":strategy,"direction":"多" if side=="long" else "空","entry":str(entry),"stop":str(stop),
       "target":str(target),"contracts":str(sz),"ctVal":str(ctval),
       "notional":float(notional),"margin":float(notional/D("2")),"risk":float(risk),
       "gain":float(sz*profit_per_contract),"rr":float(profit_per_contract/loss_per_contract)}
