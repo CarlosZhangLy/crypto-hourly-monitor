@@ -108,6 +108,7 @@ def run():
         if now>=expiry or (expiry-now).total_seconds()<120: continue
         body=("\n".join([
             "%s USDT永续｜%s｜逐仓2倍" % (sym,direction),
+            "策略类型：%s" % r.get("strategy","未分类"),
             "限价：%s USDT" % r["entry"],
             "张数：%s 张（每张面值 %s）" % (r["contracts"],r["ctVal"]),
             "保证金：约 %.2f USDT" % r["margin"],
