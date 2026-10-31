@@ -10,8 +10,8 @@ CORE = ("BTC", "ETH", "SOL", "XRP", "LTC", "ADA", "BCH", "LINK")
 D = lambda v: Decimal(str(v))
 FEE_SLIP = D("0.002")  # illustrative 0.10% round-trip fees + 0.10% slippage
 RISK_CAP = D("0.85")
-MARGIN_CAP = D("35")
-LEVERAGE = D("2")
+NOTIONAL_CAP = D("75")  # Never inflate nominal exposure with higher leverage
+MARGIN_CAPS = {2: D("25"), 3: D("25"), 5: D("15"), 7: D("12"), 10: D("8")}
 
 
 def round_to(v, tick, rounding):
@@ -32,6 +32,33 @@ def side_for(x):
     if t["ema20"] < t["ema50"] and t["closed_candle_close"] < t["ema20"] and h["closed_candle_close"] < h["ema20"]:
         return "空"
     return "多" if h["ema20"] > h["ema50"] else "空"
+
+
+def choose_leverage(x, side, entry, stop):
+    """Use 2-10x isolated leverage for margin efficiency, not larger positions."""
+    p = x["intervals"]
+    t, h, four, m = (p[k] for k in ("15m", "1h", "4h", "5m"))
+    sign = 1 if side == "多" else -1
+    t_ok = (D(t["ema20"]) - D(t["ema50"])) * sign > 0
+    h_ok = (D(h["ema20"]) - D(h["ema50"])) * sign > 0
+    four_ok = (D(four["closed_candle_close"]) - D(four["ema20"])) * sign > 0
+    vol5, vol15 = D(m["volume_ratio_vs_prior20"]), D(t["volume_ratio_vs_prior20"])
+    stop_frac = abs(entry - stop) / entry
+    q = x.get("five_minute_structure") or {}
+    confirmed = (bool(q.get("confirmed")) and q.get("bars_since_break", 99) <= 6
+                 and not q.get("regained_level", False)
+                 and q.get("side") == ("long" if side == "多" else "short"))
+    # 7x/10x require strong multi-period evidence and a nearby stop;
+    # program confirmation is only a heuristic, NEVER genuine BOS/CHoCH.
+    if confirmed and t_ok and h_ok and four_ok and vol5 >= D("1.5") and vol15 >= D("1.5") and stop_frac <= D("0.008"):
+        return D("10"), "规则确认、趋势及成交量共振，止损较近；10倍仅减少保证金"
+    if confirmed and t_ok and h_ok and vol5 >= D("1.2") and vol15 >= D("1.2") and stop_frac <= D("0.015"):
+        return D("7"), "短周期规则确认且量能较强，7倍降低保证金占用"
+    if t_ok and h_ok and four_ok and vol5 >= D("1.0") and vol15 >= D("1.0") and stop_frac <= D("0.025"):
+        return D("5"), "趋势与量能配合，5倍不增加名义仓位"
+    if t_ok and h_ok and vol5 >= D("0.8") and vol15 >= D("0.8") and stop_frac <= D("0.04"):
+        return D("3"), "15m/1h方向一致，以3倍减少保证金占用"
+    return D("2"), "高杠杆条件不足，保留2倍"
 
 
 def candidate(symbol, x, spec, stamp):
@@ -80,17 +107,20 @@ def candidate(symbol, x, spec, stamp):
         return None
 
     loss_per_contract = (risk_distance + cost_distance) * ct
+    leverage, leverage_reason = choose_leverage(x, side, entry, stop)
+    # A higher multiplier only changes reserved margin, never the exposure cap.
+    exposure_cap = min(NOTIONAL_CAP, MARGIN_CAPS[int(leverage)] * leverage)
     sz_risk = RISK_CAP / loss_per_contract
-    sz_margin = MARGIN_CAP * LEVERAGE / (entry * ct)
-    amount = round_to(min(sz_risk, sz_margin), step, ROUND_DOWN)
+    sz_exposure = exposure_cap / (entry * ct)
+    amount = round_to(min(sz_risk, sz_exposure), step, ROUND_DOWN)
     if amount < minimum:
         return None
     notional = amount * ct * entry
-    margin = notional / LEVERAGE
+    margin = notional / leverage
     risk = amount * loss_per_contract
     rr1 = ((abs(tp1 - entry) - cost_distance) * ct * amount) / risk
     rr2 = ((abs(tp2 - entry) - cost_distance) * ct * amount) / risk
-    if risk > D("1") or margin > MARGIN_CAP or rr1 < D("1.8"):
+    if risk > RISK_CAP or notional > NOTIONAL_CAP or margin > MARGIN_CAPS[int(leverage)] or rr1 < D("1.8"):
         return None
 
     dir_sign = 1 if side == "多" else -1
@@ -121,7 +151,7 @@ def candidate(symbol, x, spec, stamp):
         "symbol": symbol, "direction": side, "status": status,
         "last_price": fmt(last), "entry": fmt(entry), "stop": fmt(stop),
         "tp1": fmt(tp1), "tp2": fmt(tp2), "score": score,
-        "leverage": 2, "contracts": fmt(amount), "ctval": fmt(ct),
+        "leverage": int(leverage), "leverage_reason": leverage_reason, "contracts": fmt(amount), "ctval": fmt(ct),
         "notional": float(notional), "margin": float(margin),
         "risk": float(risk), "rr1": round(float(rr1), 2), "rr2": round(float(rr2), 2),
         "fee_slippage_assumption": "0.20%双边总成本假设",
@@ -175,6 +205,7 @@ def markdown(plans, stamp):
     rows.append("")
     rows.append("**按100U参考本金，两套预案若都触发并成交：预计保证金合计%.2fU（占本金%.1f%%），未占用约%.2fU；两单同时止损预计合计损失%.2fU（含费用滑点估算）。**" %
                 (total_margin, total_margin, remaining, total_risk))
+    rows.append("动态逐仓2—10倍（2/3/5/7/10档）；每笔保证金硬上限25U、名义价值硬上限75U；杠杆升高会减少保证金，不会按倍数放大名义仓位。止损风险较大时可低于20U。")
     rows.append("保证金是持仓占用而非预计损失；仅在两笔均成交、账户无其他持仓且忽略费用与浮盈亏影响时成立。账户实时可用保证金及实际费用以OKX为准。")
     rows.append("")
     for p in plans:
@@ -183,8 +214,8 @@ def markdown(plans, stamp):
             "OKX快照价：{last_price}；等待未来5m收盘有效突破{entry}，且15m量比恢复到0.8以上，之后回踩入场价±{retest_band}形成相应HL/LH，再考虑在{entry}附近限价；未触发严禁提前挂单。".format(**p),
             "逐仓{leverage}倍；{contracts}张，合约面值{ctval}；名义本金约{notional:.2f}U，保证金约{margin:.2f}U；含费用和滑点最大估计损失{risk:.2f}U（{fee_slippage_assumption}）；扣成本净盈亏比TP1 {rr1}:1、TP2 {rr2}:1。".format(**p),
             "止损{stop}，结构跌破/上破止损方向即失效。预案有效至北京时间{expires_bj}；到期未满足触发与回测条件直接作废；若已挂单未成交需手动撤销。".format(**p),
-            "推荐度是条件质量评分而非胜率；依据：{reasons}。程序结构确认={program_confirmed}；structure_hint={structure_hint}仅为启发式，非严格BOS/CHoCH。".format(**{**p, "reasons": "、".join(p["reasons"])}),
+            "推荐度是条件质量评分而非胜率；依据：{reasons}。杠杆选择：{leverage_reason}。程序结构确认={program_confirmed}；structure_hint={structure_hint}仅为启发式，非严格BOS/CHoCH。".format(**{**p, "reasons": "、".join(p["reasons"])}),
             "",
         ])
-    rows.append("两套预案均处于待触发状态，不代表已经满足下单条件或存在成交；需在OKX重新核对实时报价、最小张数、实际手续费及已有仓位，总风险不超过2U。")
+    rows.append("两套预案均为待触发，不代表已下单；杠杆提高会使强平价更接近入场价。跳空、滑点或强平可导致实际损失超过预估；需核对实时报价、合约张数、实际费用与已有持仓，总风险目标不超过2U。")
     return "\n".join(rows)
