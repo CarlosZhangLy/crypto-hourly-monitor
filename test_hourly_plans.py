@@ -3,6 +3,7 @@ import unittest
 from copy import deepcopy
 from datetime import datetime, timezone
 from hourly_plans import CORE, build_plans, markdown
+from risk_calc import plan as strict_plan
 from email_templates import render_markdown
 
 def snapshot():
@@ -48,12 +49,54 @@ class TestHourlyPlans(unittest.TestCase):
             self.assertLess(float(p["entry"]), float(p["tp1"]))
             self.assertLess(float(p["tp1"]), float(p["tp2"]))
             self.assertLessEqual(p["risk"], 0.85 + 0.0001)
-            self.assertLessEqual(p["margin"], 35 + 0.0001)
+            self.assertLessEqual(p["margin"], 25 + 0.0001)
+            self.assertLessEqual(p["notional"], 75 + 0.0001)
+            self.assertIn(p["leverage"], [2, 3, 5, 7, 10])
             self.assertGreaterEqual(p["rr1"], 1.8)
             self.assertTrue(0 < p["score"] < 100)
 
     def test_no_invented_contract_if_specs_missing(self):
         self.assertEqual(build_plans(snapshot(), {}), [])
+
+    def test_dynamic_ten_x_uses_small_margin_not_big_position(self):
+        data = snapshot()
+        for sym in CORE:
+            x = data["symbols"][sym + "USDT"]
+            x["five_minute_structure"] = {
+                "confirmed": True, "side": "long", "regained_level": False,
+                "bars_since_break": 2, "break_level": 99.95
+            }
+            x["intervals"]["5m"]["atr14"] = 0.05
+            x["intervals"]["5m"]["recent_swing_high"] = 100.2
+            x["intervals"]["5m"]["recent_swing_low"] = 100.05
+            x["intervals"]["5m"]["volume_ratio_vs_prior20"] = 2.0
+            x["intervals"]["15m"]["volume_ratio_vs_prior20"] = 2.0
+            x["intervals"]["15m"]["recent_swing_high"] = 103.0
+            x["intervals"]["1h"]["recent_swing_high"] = 103.0
+        plans = build_plans(data, specs())
+        self.assertEqual(len(plans), 2)
+        self.assertEqual(plans[0]["leverage"], 10)
+        self.assertLessEqual(plans[0]["notional"], 75.0001)
+        self.assertLessEqual(plans[0]["margin"], 8.0001)
+        self.assertLessEqual(plans[0]["risk"], 0.85001)
+        self.assertLessEqual(sum(p["margin"] for p in plans), 50.0001)
+        self.assertLessEqual(sum(p["risk"] for p in plans), 1.70001)
+        self.assertIn("逐仓10倍", markdown(plans, datetime.fromisoformat(data["generated_beijing"])))
+        strict = strict_plan(data["symbols"]["BTCUSDT"], specs()["BTC-USDT-SWAP"])
+        self.assertIsNotNone(strict)
+        self.assertEqual(strict["leverage"], 10)
+        self.assertLessEqual(strict["notional"], 75.0001)
+        self.assertLessEqual(strict["margin"], 8.0001)
+        self.assertLessEqual(strict["risk"], 0.85001)
+
+    def test_bigger_stop_forces_reduced_exposure(self):
+        data = snapshot()
+        proposals = build_plans(data, specs())
+        self.assertTrue(proposals)
+        for p in proposals:
+            self.assertLessEqual(p["margin"], 25)
+            self.assertLessEqual(p["risk"], 0.85)
+        self.assertIn("2—10倍", markdown(proposals, datetime.fromisoformat(data["generated_beijing"])))
 
     def test_bearish_case_and_html(self):
         data = snapshot()
