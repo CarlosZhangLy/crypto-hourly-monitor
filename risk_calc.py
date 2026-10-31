@@ -3,6 +3,7 @@ from decimal import Decimal, ROUND_DOWN, ROUND_UP
 from urllib.request import Request, urlopen
 from urllib.parse import urlencode
 import json
+from hourly_plans import choose_leverage, MARGIN_CAPS, NOTIONAL_CAP, RISK_CAP
 
 D=lambda x: Decimal(str(x))
 def floor_step(v,s): return (v/s).to_integral_value(rounding=ROUND_DOWN)*s
@@ -51,12 +52,16 @@ def plan(x,spec):
     loss_per_contract=(abs(entry-stop)+entry*cost)*ctval
     profit_per_contract=(abs(target-entry)-entry*cost)*ctval
     if profit_per_contract<=0 or profit_per_contract/loss_per_contract<D("1.8"):return None
-    max_by_risk=D("1")/loss_per_contract
-    max_by_margin=D("45")*D("2")/(entry*ctval)
-    sz=floor_step(min(max_by_risk,max_by_margin),lotsz)
+    lev, lever_reason=choose_leverage(x, "多" if side=="long" else "空", entry, stop)
+    max_by_risk=RISK_CAP/loss_per_contract
+    max_by_exposure=min(NOTIONAL_CAP,MARGIN_CAPS[int(lev)]*lev)/(entry*ctval)
+    sz=floor_step(min(max_by_risk,max_by_exposure),lotsz)
     if sz<minsz:return None
     notional=sz*ctval*entry; risk=sz*loss_per_contract
+    margin=notional/lev
+    if risk>RISK_CAP or margin>MARGIN_CAPS[int(lev)] or notional>NOTIONAL_CAP:return None
     return {"strategy":strategy,"direction":"多" if side=="long" else "空","entry":str(entry),"stop":str(stop),
       "target":str(target),"contracts":str(sz),"ctVal":str(ctval),
-      "notional":float(notional),"margin":float(notional/D("2")),"risk":float(risk),
+      "leverage":int(lev),"leverage_reason":lever_reason,
+      "notional":float(notional),"margin":float(margin),"risk":float(risk),
       "gain":float(sz*profit_per_contract),"rr":float(profit_per_contract/loss_per_contract)}
