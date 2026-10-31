@@ -46,7 +46,7 @@ def analyze(bars):
                 else bool(prior and post and post[-1][1]<prior[-1][1]))
     confirmed=touched and regained and retest_pivot and higher_low
     # avoid treating a many-bars-old break as a current setup
-    fresh=len(a)-1-i<=12
+    fresh=len(a)-1-i<=18
     out.update({"status":"retest_confirmed" if confirmed and fresh else "break_watch",
                 "side":side,"break_bar":a[i]["time"],"break_level":level,
                 "bars_since_break":len(a)-1-i,
