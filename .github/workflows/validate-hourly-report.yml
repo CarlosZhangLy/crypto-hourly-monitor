@@ -1,0 +1,26 @@
+name: Validate hourly conditional report
+on:
+  push:
+    paths:
+      - 'hourly_plans.py'
+      - 'ai_report.py'
+      - 'email_notify.py'
+      - 'email_templates.py'
+      - 'test_hourly_plans.py'
+      - '.github/workflows/validate-hourly-report.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile all email modules
+        run: python -m py_compile hourly_plans.py ai_report.py email_notify.py email_templates.py risk_calc.py
+      - name: Verify hypothetical long/short plans and HTML output
+        run: python -m unittest -v test_hourly_plans.py
