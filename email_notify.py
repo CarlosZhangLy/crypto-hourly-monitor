@@ -5,6 +5,7 @@ import os
 import smtplib
 import ssl
 from ai_report import generate as ai_generate
+from hourly_plans import build_plans, markdown as plan_markdown
 import email_templates as templates
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
@@ -49,19 +50,29 @@ def run():
         print("SMTP test email accepted by server.")
         return
     previous=json.loads(STATE.read_text(encoding="utf-8")) if STATE.exists() else {}
+    # Both hourly proposals and strict signal mails use current OKX instrument specs.
+    # If specs cannot be verified, no guessed contracts/prices are emailed.
+    try:
+        specs=fetch_specs([symbol+"-USDT-SWAP" for symbol in CORE])
+    except Exception as ex:
+        print("OKX contract specs unavailable; do not estimate order quantity:",type(ex).__name__,str(ex)[:120])
+        specs={}
     state=dict(previous)
     # Email one digest per Beijing hour, on the :34 collection (not on 15-minute collections).
     if 34<=now.minute<=48:
         hour_key=stamp.strftime("%Y-%m-%d %H")
         if previous.get("digest_hour")!=hour_key:
+            conditional=build_plans(data,specs)
+            lead=plan_markdown(conditional,stamp)
             try:
-                text=ai_generate(data)
-                title="【OKX AI行情分析】%s｜8币行情与风控" % stamp.strftime("%m-%d %H:%M")
+                commentary=ai_generate(data,conditional)
+                title="【OKX DeepSeek AI分析】%s｜%d套条件交易预案" % (stamp.strftime("%m-%d %H:%M"),len(conditional))
             except Exception as ex:
                 print("AI analysis unavailable; sending explicitly labelled rule report:",type(ex).__name__,str(ex)[:120])
-                text=build(data,stamp)
-                title="【OKX规则分析·AI未生成】%s｜8币行情与风控" % stamp.strftime("%m-%d %H:%M")
-            send(title,text,templates.analysis(text,title))
+                commentary=build(data,stamp)
+                title="【OKX规则分析·AI未生成】%s｜%d套条件交易预案" % (stamp.strftime("%m-%d %H:%M"),len(conditional))
+            text=lead+"\n\n"+commentary
+            send(title,text,templates.analysis(text,title,plan_count=len(conditional)))
             state["digest_hour"]=hour_key
             STATE.parent.mkdir(exist_ok=True)
             STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
@@ -84,7 +95,6 @@ def run():
             STATE.parent.mkdir(exist_ok=True)
             STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
             print("Expiry advisory accepted by SMTP:",name)
-    specs=fetch_specs([s+"-USDT-SWAP" for s in CORE])
     current={}
     candidates=[]
     for sym in CORE:
