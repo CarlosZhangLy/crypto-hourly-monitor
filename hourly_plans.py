@@ -164,11 +164,18 @@ def markdown(plans, stamp):
                 "本次未能按OKX合约规格与100U风险预算验证出可计算的合约数量；不发布未经验证的委托点位。")
     rows = [
         "## 条件性交易预案（AI分析前置，非直接委托）",
-        "| 币种/方向 | 触发后限价入场 | 止损 | 止盈TP1 | 止盈TP2 | 推荐度 |",
+        "| 币种/方向 | 限价入场 | 止损 | 止盈TP1 / TP2 | 杠杆 / 保证金 | 推荐度 |",
         "|---|---:|---:|---:|---:|---:|",
     ]
     for p in plans:
-        rows.append("| {symbol} {direction} | {entry} | {stop} | {tp1} | {tp2} | {score}% |".format(**p))
+        rows.append("| {symbol} {direction} | {entry} | {stop} | {tp1} / {tp2} | 逐仓{leverage}倍 / {margin:.2f}U | {score}% |".format(**p))
+    total_margin = sum(p["margin"] for p in plans)
+    total_risk = sum(p["risk"] for p in plans)
+    remaining = 100.0 - total_margin
+    rows.append("")
+    rows.append("**按100U参考本金，两套预案若都触发并成交：预计保证金合计%.2fU（占本金%.1f%%），未占用约%.2fU；两单同时止损预计合计损失%.2fU（含费用滑点估算）。**" %
+                (total_margin, total_margin, remaining, total_risk))
+    rows.append("保证金是持仓占用而非预计损失；仅在两笔均成交、账户无其他持仓且忽略费用与浮盈亏影响时成立。账户实时可用保证金及实际费用以OKX为准。")
     rows.append("")
     for p in plans:
         rows.extend([
