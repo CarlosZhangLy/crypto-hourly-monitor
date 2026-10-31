@@ -78,10 +78,15 @@ def render_markdown(text):
         i+=1
     return "".join(out)
 
-def analysis(text, title):
-    verdict='暂不交易' if '暂不交易' in text else '查看完整分析'
-    status='<div style="background:#f1f5f9;border-radius:10px;padding:15px;margin-bottom:14px;font-weight:700;color:#334155">本期结论：'+esc(verdict)+'</div>'
-    return shell(title,"HOURLY MARKET BRIEF",status+render_markdown(text))
+def analysis(text, title, plan_count=0):
+    if plan_count:
+        label="本期%d套条件性交易预案｜等待触发，非当前委托" % plan_count
+        color="#eaf0fb"
+    else:
+        label="合约规格未核验或无符合风险预算的预案｜勿直接委托"
+        color="#fff7ed"
+    status='<div style="background:'+color+';border-radius:10px;padding:15px;margin-bottom:14px;font-weight:700;color:#27374d">'+esc(label)+'</div>'
+    return shell(title,"DEEPSEEK AI · CONDITIONAL PLANS",status+render_markdown(text))
 
 def field(label,value,accent=False):
     return '<td valign="top" width="50%" style="padding:10px 8px;border-bottom:1px solid #e8edf3"><div style="font-size:12px;color:#64748b">'+esc(label)+'</div><div style="font-size:%s;font-weight:700;color:%s;margin-top:4px;word-break:break-word">%s</div></td>'%("21px" if accent else "17px","#166534" if accent else "#17243b",esc(value))
