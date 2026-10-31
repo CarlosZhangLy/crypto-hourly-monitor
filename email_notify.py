@@ -117,7 +117,8 @@ def run():
         # At collection + GitHub workflow latency this may already be expired; never send stale actionable plans.
         if now>=expiry or (expiry-now).total_seconds()<120: continue
         body=("\n".join([
-            "%s USDT永续｜%s｜逐仓2倍" % (sym,direction),
+            "%s USDT永续｜%s｜逐仓%s倍" % (sym,direction,r["leverage"]),
+            "杠杆依据：%s" % r.get("leverage_reason","根据信号质量与风险预算动态选择"),
             "策略类型：%s" % r.get("strategy","未分类"),
             "限价：%s USDT" % r["entry"],
             "张数：%s 张（每张面值 %s）" % (r["contracts"],r["ctVal"]),
