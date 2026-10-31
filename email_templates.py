@@ -93,7 +93,7 @@ def field(label,value,accent=False):
 
 def trade(sym,direction,r,stamp,expiry):
     top='<div style="padding:13px 16px;border-radius:10px;background:#eaf6ee;color:#166534;font-weight:700;font-size:18px;margin-bottom:14px">交易计划：'+esc(sym)+' '+esc(direction)+'</div>'
-    grid='<table role="presentation" cellpadding="0" cellspacing="0" width="100%"><tr>'+field('限价入场',r['entry']+' USDT',True)+field('逐仓杠杆','2倍')+'</tr><tr>'+field('止损 SL',r['stop'])+field('止盈 TP',r['target'])+'</tr><tr>'+field('OKX合约张数',r['contracts']+' 张')+field('预估保证金','%.2f U'%r['margin'])+'</tr><tr>'+field('估算最大损失','%.2f U'%r['risk'])+field('扣成本盈亏比','%.2f:1'%r['rr'])+'</tr></table>'
+    grid='<table role="presentation" cellpadding="0" cellspacing="0" width="100%"><tr>'+field('限价入场',r['entry']+' USDT',True)+field('逐仓杠杆',str(r['leverage'])+'倍')+'</tr><tr>'+field('止损 SL',r['stop'])+field('止盈 TP',r['target'])+'</tr><tr>'+field('OKX合约张数',r['contracts']+' 张')+field('预估保证金','%.2f U'%r['margin'])+'</tr><tr>'+field('估算最大损失','%.2f U'%r['risk'])+field('扣成本盈亏比','%.2f:1'%r['rr'])+'</tr></table>'
     foot='<div style="background:#fff7ed;border-radius:10px;padding:13px 16px;margin-top:16px;line-height:1.75;font-size:13px"><strong>有效期至 '+esc(expiry.strftime('%Y-%m-%d %H:%M:%S'))+'（北京）</strong><div>快照：'+esc(stamp.strftime('%Y-%m-%d %H:%M:%S'))+'；到期未成交请检查并撤销；价格偏离、结构失效或实际净盈亏比低于1.8时不下单。</div><div>预估费用含手续费与滑点，不保证最终损失上限。请核对OKX实时报价、账户风险及合约规格。</div></div>'
     return shell(sym+" "+direction+"｜限价 "+r['entry'],"TRADE SIGNAL · 人工确认后下单",top+grid+foot)
 
