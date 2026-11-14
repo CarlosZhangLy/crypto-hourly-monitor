@@ -28,11 +28,11 @@ concurrency:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
       - name: Syntax and unit tests
@@ -42,11 +42,11 @@ jobs:
 
   api_smoke:
     if: github.event_name == 'push'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 4
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
       - name: Verify OKX historical 1m pagination and confirmed candle parsing
@@ -66,7 +66,7 @@ jobs:
   review:
     needs: validate
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 22
     env:
       QQ_SMTP_USER: ${{ secrets.QQ_SMTP_USER }}
@@ -75,10 +75,10 @@ jobs:
       REVIEW_DAY: ${{ inputs.review_day }}
       DRY_RUN: ${{ inputs.dry_run == true && '1' || '0' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 1
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
       - name: Replay OKX closed 1-minute candles and send daily QQ review
