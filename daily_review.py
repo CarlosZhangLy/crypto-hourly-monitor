@@ -391,15 +391,22 @@ def tabulate(trades,records,day,now,failures):
         floating=sum(x.get("unrealized_net",0) for x in opens)
         wins=sum(x.get("net_pnl",0)>0 for x in closed)
         losses=sum(x.get("net_pnl",0)<0 for x in closed)
+        historical=[t for t in trades.values() if t["model"]==model]
+        all_realized=sum(t.get("net_pnl",0) for t in historical if t["status"]=="CLOSED")
+        all_floating=sum(t.get("unrealized_net",0) for t in historical if t["status"]=="OPEN")
+        unknown_floating=any(t["status"]=="OPEN" and ("unrealized_net" not in t or t.get("data_issue")) for t in historical)
         model_summaries[model]={"plans":len(rows),"filled":nfill,"expired":unfilled,
                                 "wins":wins,"losses":losses,"closed":len(closed),
                                 "open":len(opens),"realized":net,"unrealized":floating,
-                                "equity_estimate":100+net+floating}
+                                "cumulative_realized":all_realized,"cumulative_floating":all_floating,
+                                "equity_estimate":None if unknown_floating else 100+all_realized+all_floating}
         lines.extend([f"## 模型{model}｜{'收到即挂2小时' if model=='A' else '突破回踩确认后挂单'}",
             f"推荐{len(rows)}笔；模拟成交{nfill}笔；未成交撤单{unfilled}笔；"
             f"已平仓{len(closed)}笔（盈利{wins}、亏损{losses}）；仍持仓{len(opens)}笔；"
             f"已实现净盈亏 **{net:+.4f}U**，浮动净盈亏 **{floating:+.4f}U**。",
             f"已平仓胜率：{(wins/len(closed)*100):.1f}%" if closed else "已平仓胜率：暂无可计算样本",
+            ("累计参考权益：无法可靠估值（存在未取得1m行情的持仓）" if unknown_floating else
+             f"累计参考权益：**{100+all_realized+all_floating:.4f}U**（起始100U＋历史已实现＋未平仓浮动）"),
             "",
             "| 推荐时间 | 币种/方向 | 杠杆 | 限价 | 状态/最高浮盈 | 平仓原因 | 净盈亏U |",
             "|---|---|---:|---:|---|---|---:|"])
@@ -450,7 +457,7 @@ def send_email(title,text):
 
 def run(day=None,dry_run=False):
     now=datetime.now(BJ)
-    day=day or now.date().isoformat()
+    day=day or (now-timedelta(hours=2)).date().isoformat()
     if day>now.date().isoformat():
         raise ValueError("Cannot review a future day")
     if day==now.date().isoformat():
@@ -461,6 +468,9 @@ def run(day=None,dry_run=False):
     prior=json.loads(STATE.read_text(encoding="utf-8")) if STATE.exists() else {}
     if prior.get("last_review_date") and day<prior["last_review_date"]:
         raise ValueError("Old date review would corrupt incremental state")
+    if not dry_run and prior.get("last_review_date")==day:
+        print("Daily review already delivered for",day)
+        return
     trades=prior.get("trades",{})
     records=input_records()
     failures=replay(trades,records,cutoff)
