@@ -6,6 +6,7 @@ import smtplib
 import ssl
 from ai_report import generate as ai_generate
 from hourly_plans import build_plans, markdown as plan_markdown
+from recommendation_archive import save as archive_email_plans
 import email_templates as templates
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
@@ -73,6 +74,7 @@ def run():
                 title="【OKX规则分析·AI未生成】%s｜%d套条件交易预案" % (stamp.strftime("%m-%d %H:%M"),len(conditional))
             text=lead+"\n\n"+commentary
             send(title,text,templates.analysis(text,title,plan_count=len(conditional)))
+            archive_email_plans(datetime.now(BJ),stamp,title,conditional)
             state["digest_hour"]=hour_key
             STATE.parent.mkdir(exist_ok=True)
             STATE.write_text(json.dumps(state,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
