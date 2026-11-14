@@ -137,7 +137,12 @@ def allowed_portfolio(trade,alltrades,model,fill):
     other_risk=sum(v["estimated_initial_risk"] for v in live)
     other_margin=sum(v["margin_used"] for v in live)
     if other_risk+risk>TOTAL_RISK_MAX+EPS:return False,"并持风险超过1.70U"
-    if other_margin+margin>100+EPS:return False,"100U预算保证金不足"
+    # Net cumulative paper equity, not a fresh 100U allowance on every order.
+    realized=sum(v.get("net_pnl",0) for v in alltrades.values()
+                 if v["model"]==model and v["status"]=="CLOSED")
+    floating=sum(v.get("unrealized_net",0) for v in live)
+    equity=max(0,100+realized+floating)
+    if other_margin+margin>equity+EPS:return False,"模拟账户权益不足"
     return True,(risk,margin)
 
 def fill_trade(t,fill,bar,alltrades):
@@ -435,6 +440,21 @@ def tabulate(trades,records,day,now,failures):
         if model=="B":
             lines.append("回踩和HL/LH取自1m聚合5m的代理识别，不能代表完全复刻每小时报告中的人工策略判断。")
         lines.append("")
+    carried=[t for t in trades.values()
+             if t["status"]=="CLOSED" and t.get("exit_at") and
+             datetime.fromtimestamp(t["exit_at"]/1000,BJ).date().isoformat()==day and
+             datetime.fromtimestamp(t["sent_at"]/1000,BJ).date().isoformat()<day]
+    if carried:
+        carried_net=sum(t.get("net_pnl",0) for t in carried)
+        lines.extend(["## 上日结转、今日平仓",
+                      f"此前推荐的持仓今日共有{len(carried)}笔（A/B模型分别记账），"
+                      f"净盈亏合计{carried_net:+.4f}U；已计入累计权益，不重复计入当日新推荐的成绩。",
+                      "| 模型 | 推荐时间 | 品种/方向 | 今日平仓 | 净盈亏U |",
+                      "|---|---|---|---|---:|"])
+        for t in carried:
+            lines.append(f"| {t['model']} | {fmt_dt(t['sent_at'])} | {t['symbol']} {t['direction']} | "
+                         f"{fmt_dt(t['exit_at'])} {t.get('exit_reason','')} | {t['net_pnl']:+.4f} |")
+        lines.append("")
     lines.extend(["## 当日市场/策略解读",
       "重点比较两套执行方式的成交率、已平仓净盈亏与最高浮盈回撤。推荐度是条件质量评分，不是已验证胜率。",
       "不能仅按行情后续涨跌判定历史推荐已成交；无成交的推荐净盈亏为0，实时未结算持仓独立列示。",
@@ -461,7 +481,7 @@ def send_email(title,text):
 
 def run(day=None,dry_run=False):
     now=datetime.now(BJ)
-    day=day or (now-timedelta(hours=2)).date().isoformat()
+    day=day or (now-timedelta(hours=6)).date().isoformat()
     if day>now.date().isoformat():
         raise ValueError("Cannot review a future day")
     if day==now.date().isoformat():
