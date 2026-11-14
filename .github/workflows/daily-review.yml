@@ -56,10 +56,10 @@ jobs:
           from daily_review import okx_1m
           now = int(datetime.now(timezone.utc).timestamp() // 60) * 60000
           end = now - 60000
-          start = end - 4 * 60000
+          start = end - 124 * 60000
           bars = okx_1m("BTC-USDT-SWAP", start, end)
           print("Historical confirmed 1m candles:", len(bars), bars[0], bars[-1])
-          assert len(bars) == 5, "Expected five contiguous closed BTC 1m candles"
+          assert len(bars) == 125, "Expected 125 contiguous BTC 1m candles across history-candles pages"
           assert all(b["low"] <= b["open"] <= b["high"] for b in bars)
           PY
 
