@@ -408,7 +408,7 @@ def tabulate(trades,records,day,now,failures):
             ("累计参考权益：无法可靠估值（存在未取得1m行情的持仓）" if unknown_floating else
              f"累计参考权益：**{100+all_realized+all_floating:.4f}U**（起始100U＋历史已实现＋未平仓浮动）"),
             "",
-            "| 推荐时间 | 币种/方向 | 杠杆 | 限价 | 状态/最高浮盈 | 平仓原因 | 净盈亏U |",
+            "| 推荐时间 | 币种/方向 | 杠杆 | 限价/成交价 | 平仓价 | 状态/最高浮盈 | 净盈亏U |",
             "|---|---|---:|---:|---|---|---:|"])
         for t in rows:
             state=t["status"]
@@ -421,11 +421,15 @@ def tabulate(trades,records,day,now,failures):
             if state=="CLOSED":label+=f"；平仓{fmt_dt(t['exit_at'])}"
             if state in ("CLOSED","OPEN"):
                 label+=f"；最高{t.get('max_favorable_pct',0)*t['leverage']:.1f}%ROI"
+            if t.get("exit_reason"):label+="；"+t["exit_reason"]
+            if t.get("data_issue"):label+="；数据缺口（不保证完整）"
             pnl=(f"{t['net_pnl']:+.4f}" if state=="CLOSED" else
                  f"浮动{t.get('unrealized_net',0):+.4f}" if state=="OPEN" else "—")
+            price_label=str(t.get("entry","—"))+" / "+str(round(t["fill_price"],8) if "fill_price" in t else "—")
+            exit_label=str(round(t["exit_price"],8)) if "exit_price" in t else "—"
             lines.append(f"| {fmt_dt(t['sent_at'])} | {t['symbol']} {t['direction']} | "
-                         f"{t.get('leverage','—')} | {t.get('entry','—')} | "
-                         f"{label} | {t.get('exit_reason','—')} | {pnl} |")
+                         f"{t.get('leverage','—')} | {price_label} | "
+                         f"{exit_label} | {label} | {pnl} |")
         if not rows:lines.append("| — | — | — | — | 本日无可审计推荐记录 | — | — |")
         lines.extend(["","**说明：** 平仓盈亏已包含双边0.10%吃单费用；未满2小时或仍持仓的推荐不强行结算。"])
         if model=="B":
