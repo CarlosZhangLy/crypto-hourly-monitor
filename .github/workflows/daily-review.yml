@@ -1,0 +1,97 @@
+name: Daily OKX Paper Trading Review
+on:
+  push:
+    paths:
+      - 'daily_review.py'
+      - 'recommendation_archive.py'
+      - 'tests/test_daily_review.py'
+      - '.github/workflows/daily-review.yml'
+  workflow_dispatch:
+    inputs:
+      review_day:
+        description: 'Beijing date YYYY-MM-DD; leave blank to use latest complete daily window'
+        required: false
+        type: string
+      dry_run:
+        description: 'Calculate only; do not send email or persist result'
+        required: false
+        default: true
+        type: boolean
+  schedule:
+    # UTC 15:55 = Beijing 23:55; GitHub scheduled jobs may start later.
+    - cron: '55 15 * * *'
+permissions:
+  contents: write
+concurrency:
+  group: market-snapshot
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Syntax and unit tests
+        run: |
+          python -m py_compile daily_review.py recommendation_archive.py email_notify.py hourly_plans.py
+          python -m unittest discover -s tests -p 'test_daily_review.py' -v
+
+  review:
+    needs: validate
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    env:
+      QQ_SMTP_USER: ${{ secrets.QQ_SMTP_USER }}
+      QQ_SMTP_AUTH_CODE: ${{ secrets.QQ_SMTP_AUTH_CODE }}
+      ALERT_TO: ${{ secrets.ALERT_TO }}
+      REVIEW_DAY: ${{ inputs.review_day }}
+      DRY_RUN: ${{ inputs.dry_run == true && '1' || '0' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Replay OKX closed 1-minute candles and send daily QQ review
+        run: |
+          ARGS=()
+          if [ -n "${REVIEW_DAY}" ]; then ARGS+=(--day "${REVIEW_DAY}"); fi
+          if [ "${DRY_RUN}" = '1' ]; then ARGS+=(--dry-run); fi
+          python daily_review.py "${ARGS[@]}"
+
+      - name: Commit daily review and carry-forward simulation state
+        if: success() && env.DRY_RUN != '1'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          mkdir -p /tmp/daily-review-out
+          cp data/daily_review_state.json /tmp/daily-review-out/state.json
+          cp -a data/daily_reviews /tmp/daily-review-out/reviews
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p data/daily_reviews
+            cp /tmp/daily-review-out/state.json data/daily_review_state.json
+            cp -a /tmp/daily-review-out/reviews/. data/daily_reviews/
+            git add data/daily_review_state.json data/daily_reviews
+            if git diff --cached --quiet; then
+              echo "Daily review artifacts already persisted"
+              break
+            fi
+            git commit -m 'Publish daily paper trading review'
+            if git push origin HEAD:main; then
+              echo "Daily review committed"
+              break
+            fi
+            if [ "$attempt" = 5 ]; then
+              echo "ERROR: failed to commit daily review"
+              exit 1
+            fi
+            sleep 3
+          done
