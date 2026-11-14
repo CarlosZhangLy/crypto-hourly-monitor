@@ -137,3 +137,54 @@ jobs:
             fi
             sleep 2
           done
+
+      - name: Recover missed daily OKX paper-trade review just after midnight Beijing
+        env:
+          QQ_SMTP_USER: ${{ secrets.QQ_SMTP_USER }}
+          QQ_SMTP_AUTH_CODE: ${{ secrets.QQ_SMTP_AUTH_CODE }}
+          ALERT_TO: ${{ secrets.ALERT_TO }}
+        run: |
+          # cron-job.org already dispatches this collector every 15 minutes.
+          # The primary 23:55 daily-review schedule remains enabled.
+          NOW_BJ=$(TZ=Asia/Shanghai date '+%H:%M')
+          HOUR_BJ=${NOW_BJ%%:*}
+          if [ "${HOUR_BJ}" != '00' ]; then
+            echo "Not midnight fallback hour; skip daily review"
+            exit 0
+          fi
+          DAY_BJ=$(TZ=Asia/Shanghai date -d 'yesterday' '+%Y-%m-%d')
+          echo "Recovering report for Beijing day ${DAY_BJ}"
+          git fetch origin main
+          git reset --hard origin/main
+          python daily_review.py --day "${DAY_BJ}"
+          if [ ! -f data/daily_review_state.json ]; then
+            echo "ERROR: missing daily review state"
+            exit 1
+          fi
+          mkdir -p /tmp/daily-fallback
+          cp data/daily_review_state.json /tmp/daily-fallback/state.json
+          [ ! -d data/daily_reviews ] || cp -a data/daily_reviews /tmp/daily-fallback/reviews
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p data/daily_reviews
+            cp /tmp/daily-fallback/state.json data/daily_review_state.json
+            if [ -d /tmp/daily-fallback/reviews ]; then
+              cp -a /tmp/daily-fallback/reviews/. data/daily_reviews/
+            fi
+            git add data/daily_review_state.json data/daily_reviews
+            if git diff --cached --quiet; then
+              echo "Daily review already saved"
+              break
+            fi
+            git commit -m 'Publish recovered daily OKX review'
+            if git push origin HEAD:main; then
+              echo "Recovered daily review committed"
+              break
+            fi
+            if [ "$attempt" = 5 ]; then
+              echo "ERROR: failed to persist recovered daily review"
+              exit 1
+            fi
+            sleep 2
+          done
