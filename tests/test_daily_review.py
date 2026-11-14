@@ -90,7 +90,6 @@ class BacktestTests(unittest.TestCase):
         cutoff=ms(sent+timedelta(hours=2,minutes=10))
         failures=replay(trades,records,cutoff,fetcher=feed)
         self.assertFalse(failures)
-        print("REPLAY_DIAGNOSTIC",trades["A|replay01"])
         self.assertEqual(trades["A|replay01"]["status"],"CLOSED")
         self.assertGreater(trades["A|replay01"]["net_pnl"],0)
         self.assertEqual(trades["B|replay01"]["status"],"EXPIRED")
