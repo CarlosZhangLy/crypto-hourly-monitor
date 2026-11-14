@@ -26,7 +26,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Validate notification code syntax
-        run: python -m py_compile email_notify.py email_templates.py ai_report.py hourly_plans.py risk_calc.py pushplus_notify.py
+        run: python -m py_compile email_notify.py email_templates.py ai_report.py hourly_plans.py risk_calc.py pushplus_notify.py recommendation_archive.py
       - name: Fetch & calculate
         run: python collector.py
       - name: Publish latest snapshot
@@ -101,19 +101,39 @@ jobs:
           PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}
         run: python signal_notify.py
 
-      - name: Persist alert state
+      - name: Persist alert state and immutable recommendation emails
         if: always()
         run: |
-          if [ -f data/signal_state.json ] || [ -f data/email_state.json ]; then
-            if [ -f data/signal_state.json ]; then cp data/signal_state.json /tmp/signal-state.json; fi
-            if [ -f data/email_state.json ]; then cp data/email_state.json /tmp/email-state.json; fi
+          # Save local artifacts across git fetch/reset and push retries.
+          mkdir -p /tmp/monitor-state
+          [ ! -f data/signal_state.json ] || cp data/signal_state.json /tmp/monitor-state/signal_state.json
+          [ ! -f data/email_state.json ] || cp data/email_state.json /tmp/monitor-state/email_state.json
+          if [ -d data/recommendations ]; then
+            cp -a data/recommendations /tmp/monitor-state/recommendations
+          fi
+          for attempt in 1 2 3 4 5; do
             git fetch origin main
             git reset --hard origin/main
-            if [ -f /tmp/signal-state.json ]; then cp /tmp/signal-state.json data/signal_state.json; fi
-            if [ -f /tmp/email-state.json ]; then cp /tmp/email-state.json data/email_state.json; fi
-            git add data/signal_state.json data/email_state.json
-            if ! git diff --cached --quiet; then
-              git commit -m 'Update signal notification state'
-              git push origin HEAD:main || echo 'Alert state push collided; next run will retry'
+            mkdir -p data
+            [ ! -f /tmp/monitor-state/signal_state.json ] || cp /tmp/monitor-state/signal_state.json data/signal_state.json
+            [ ! -f /tmp/monitor-state/email_state.json ] || cp /tmp/monitor-state/email_state.json data/email_state.json
+            if [ -d /tmp/monitor-state/recommendations ]; then
+              mkdir -p data/recommendations
+              cp -a /tmp/monitor-state/recommendations/. data/recommendations/
             fi
-          fi
+            git add data/signal_state.json data/email_state.json data/recommendations 2>/dev/null || true
+            if git diff --cached --quiet; then
+              echo "No changed alert state or recommendation records"
+              break
+            fi
+            git commit -m 'Persist alert state and sent recommendations'
+            if git push origin HEAD:main; then
+              echo "Recommendation history persisted"
+              break
+            fi
+            if [ "$attempt" = 5 ]; then
+              echo "ERROR: failed to persist recommendation history after retries"
+              exit 1
+            fi
+            sleep 2
+          done
