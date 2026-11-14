@@ -140,7 +140,7 @@ def allowed_portfolio(trade,alltrades,model,fill):
     # Net cumulative paper equity, not a fresh 100U allowance on every order.
     realized=sum(v.get("net_pnl",0) for v in alltrades.values()
                  if v["model"]==model and v["status"]=="CLOSED")
-    floating=sum(v.get("unrealized_net",0) for v in live)
+    floating=sum(gross_net(v,v.get("mark_price",v["fill_price"]))[2] for v in live)
     equity=max(0,100+realized+floating)
     if other_margin+margin>equity+EPS:return False,"模拟账户权益不足"
     return True,(risk,margin)
@@ -455,6 +455,27 @@ def tabulate(trades,records,day,now,failures):
             lines.append(f"| {t['model']} | {fmt_dt(t['sent_at'])} | {t['symbol']} {t['direction']} | "
                          f"{fmt_dt(t['exit_at'])} {t.get('exit_reason','')} | {t['net_pnl']:+.4f} |")
         lines.append("")
+    primary=by_model["A"]
+    primary_closed=[t for t in primary if t["status"]=="CLOSED"]
+    if primary_closed:
+        groups=defaultdict(float)
+        sides=defaultdict(lambda:[0,0.0])
+        for t in primary_closed:
+            groups[t["symbol"]]+=t.get("net_pnl",0)
+            sides[t["direction"]][0]+=1
+            sides[t["direction"]][1]+=t.get("net_pnl",0)
+        strongest=max(groups.items(),key=lambda x:x[1])
+        weakest=min(groups.items(),key=lambda x:x[1])
+        lines.append(f"模型A已平仓表现：最佳品种{strongest[0]}净盈亏{strongest[1]:+.4f}U；"
+                     f"最弱品种{weakest[0]}净盈亏{weakest[1]:+.4f}U。")
+        lines.append("按方向："+ "；".join(f"{side}{n}笔净盈亏{value:+.4f}U"
+                      for side,(n,value) in sorted(sides.items())))
+        a=model_summaries["A"];b=model_summaries["B"]
+        lines.append(f"挂单方式对照：模型A成交{a['filled']}/{a['plans']}笔，模型B成交"
+                     f"{b['filled']}/{b['plans']}笔；本日推荐已平仓净盈亏分别"
+                     f"{a['realized']:+.4f}U和{b['realized']:+.4f}U。")
+    else:
+        lines.append("模型A当日尚无已平仓样本，不能评价策略胜率或推荐度有效性。")
     lines.extend(["## 当日市场/策略解读",
       "重点比较两套执行方式的成交率、已平仓净盈亏与最高浮盈回撤。推荐度是条件质量评分，不是已验证胜率。",
       "不能仅按行情后续涨跌判定历史推荐已成交；无成交的推荐净盈亏为0，实时未结算持仓独立列示。",
