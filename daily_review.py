@@ -185,7 +185,7 @@ def initialize(rec,model):
             raise ValueError("stop direction mismatch")
         born=ms(sent)
         return {"id":p["id"],"model":model,"symbol":p["symbol"],"direction":direction,
-                "score":p.get("score"),"sent_at":born,"expire_at":born+ORDER_SECONDS,
+                "score":p.get("score"),"sent_at":born,"expire_at":born+ORDER_SECONDS*1000,
                 "entry":entry,"limit":entry,"stop":stop,"units":size,"leverage":lev,
                 "tick":as_float(p.get("tick_sz") or 0),
                 "band":as_float(p.get("retest_band") or 0),
