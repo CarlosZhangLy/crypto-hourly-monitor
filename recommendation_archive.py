@@ -26,6 +26,7 @@ def save(sent_at, snapshot_at, title, plans):
             "stop":p["stop"],"tp1":p["tp1"],"tp2":p["tp2"],
             "leverage":p["leverage"],"contracts":p["contracts"],"ctval":p["ctval"],
             "notional":p["notional"],"margin":p["margin"],"score":p["score"],
+            "tick_sz":p.get("tick_sz"),
             "retest_band":p.get("retest_band"),"structure_hint":p.get("structure_hint"),
             "program_confirmed":p.get("program_confirmed",False),
             "plan_expires_bj":p.get("expires_bj"),
