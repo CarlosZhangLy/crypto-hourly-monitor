@@ -151,7 +151,7 @@ def candidate(symbol, x, spec, stamp):
         "symbol": symbol, "direction": side, "status": status,
         "last_price": fmt(last), "entry": fmt(entry), "stop": fmt(stop),
         "tp1": fmt(tp1), "tp2": fmt(tp2), "score": score,
-        "leverage": int(leverage), "leverage_reason": leverage_reason, "contracts": fmt(amount), "ctval": fmt(ct),
+        "leverage": int(leverage), "leverage_reason": leverage_reason, "contracts": fmt(amount), "ctval": fmt(ct), "tick_sz":fmt(tick),
         "notional": float(notional), "margin": float(margin),
         "risk": float(risk), "rr1": round(float(rr1), 2), "rr2": round(float(rr2), 2),
         "fee_slippage_assumption": "0.20%双边总成本假设",
