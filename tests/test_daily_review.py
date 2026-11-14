@@ -2,7 +2,7 @@
 import unittest
 from datetime import datetime,timezone,timedelta
 from daily_review import (FEE,LEVELS,protect_stop,gross_net,process_position,
-                          fill_trade,limit_fill,initialize,tabulate)
+                          fill_trade,limit_fill,initialize,tabulate,replay,ms)
 BJ=timezone(timedelta(hours=8))
 class BacktestTests(unittest.TestCase):
     def example(self,direction="多"):
@@ -69,4 +69,33 @@ class BacktestTests(unittest.TestCase):
         fill_trade(t2,100,self.bar(),d)
         fill_trade(t3,100,self.bar(),d)
         self.assertEqual(t3["status"],"SKIPPED")
+
+    def test_full_daily_replay_with_synthetic_minute_candles(self):
+        sent=datetime(2026,11,14,9,34,tzinfo=BJ)
+        p={"id":"replay01","symbol":"LTC","direction":"多","entry":"100",
+           "stop":"98","contracts":"0.3","ctval":"1","leverage":3,
+           "score":71,"tick_sz":"0.01","retest_band":"0.1"}
+        records={"replay01":(sent,p)}
+        def feed(inst,start,end):
+            self.assertEqual(inst,"LTC-USDT-SWAP")
+            result=[]
+            first=ms(sent)+60000
+            for ts in range(start,end+1,60000):
+                o,h,l,c=100,100.1,99.9,100
+                if ts==first:o,h,l,c=100,100.5,100.3,100.4
+                if ts==first+60000:o,h,l,c=100.3,100.3,100.1,100.2
+                result.append({"ts":ts,"open":o,"high":h,"low":l,"close":c,"volume":100})
+            return result
+        trades={}
+        cutoff=ms(sent+timedelta(hours=2,minutes=10))
+        failures=replay(trades,records,cutoff,fetcher=feed)
+        self.assertFalse(failures)
+        self.assertEqual(trades["A|replay01"]["status"],"CLOSED")
+        self.assertGreater(trades["A|replay01"]["net_pnl"],0)
+        self.assertEqual(trades["B|replay01"]["status"],"EXPIRED")
+        report,summary=tabulate(trades,records,"2026-11-14",sent+timedelta(hours=3),{})
+        self.assertIn("限价/成交价",report)
+        self.assertEqual(summary["A"]["filled"],1)
+        self.assertEqual(summary["B"]["expired"],1)
+
 if __name__=="__main__":unittest.main()
