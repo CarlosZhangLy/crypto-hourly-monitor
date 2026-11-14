@@ -89,6 +89,8 @@ def stop_hit(t,bar,stop):
 def process_position(t,bar):
     if t["status"]!="OPEN":return
     current=t["protect_stop"]
+    t["mark_price"]=bar["close"]
+    t.pop("data_issue",None)
     # Conservative intraminute sequencing: old stop wins before new milestones.
     if stop_hit(t,bar,current):
         close_trade(t,current,bar["ts"],"原始止损" if t["highest_level"]==0 else "移动止损")
@@ -308,6 +310,8 @@ def replay(trades,records,cutoff_ms,fetcher=okx_1m):
             failures[symbol]=str(ex)
             for t in this:
                 t["data_issue"]=str(ex)
+                t.pop("mark_price",None)
+                t.pop("unrealized_net",None)
             continue
     # Cross-symbol chronological replay is needed to enforce total capital/risk.
     events=[]
@@ -409,7 +413,7 @@ def tabulate(trades,records,day,now,failures):
             if t.get("fill_at"):label+=f"；进场{fmt_dt(t['fill_at'])}"
             if state=="CLOSED":label+=f"；平仓{fmt_dt(t['exit_at'])}"
             if state in ("CLOSED","OPEN"):
-                label+=f"；最高{t.get('max_favorable_pct',0)*100*t['leverage']:.1f}%ROI"
+                label+=f"；最高{t.get('max_favorable_pct',0)*t['leverage']:.1f}%ROI"
             pnl=(f"{t['net_pnl']:+.4f}" if state=="CLOSED" else
                  f"浮动{t.get('unrealized_net',0):+.4f}" if state=="OPEN" else "—")
             lines.append(f"| {fmt_dt(t['sent_at'])} | {t['symbol']} {t['direction']} | "
@@ -465,9 +469,10 @@ def run(day=None,dry_run=False):
     # is stored by replay per position below.
     # All realized results stay in state for transparent future carry-forward.
     for t in trades.values():
-        if t["status"]=="OPEN" and t.get("mark_price") and t.get("margin_used"):
+        if t["status"]=="OPEN" and t.get("mark_price") and t.get("margin_used") and not t.get("data_issue"):
             gross,fees,net=gross_net(t,t["mark_price"])
             t["unrealized_net"]=net
+            t["unrealized_roi_pct"]=100*net/t["margin_used"]
     report,summaries=tabulate(trades,records,day,now,failures)
     output=Path("data/daily_reviews")/(day+".md")
     detail=Path("data/daily_reviews")/(day+".json")
