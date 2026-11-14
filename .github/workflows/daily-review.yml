@@ -40,6 +40,29 @@ jobs:
           python -m py_compile daily_review.py recommendation_archive.py email_notify.py hourly_plans.py
           python -m unittest discover -s tests -p 'test_daily_review.py' -v
 
+  api_smoke:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify OKX historical 1m pagination and confirmed candle parsing
+        run: |
+          python - <<'PY'
+          from datetime import datetime, timezone
+          from daily_review import okx_1m
+          now = int(datetime.now(timezone.utc).timestamp() // 60) * 60000
+          end = now - 60000
+          start = end - 4 * 60000
+          bars = okx_1m("BTC-USDT-SWAP", start, end)
+          print("Historical confirmed 1m candles:", len(bars), bars[0], bars[-1])
+          assert len(bars) == 5, "Expected five contiguous closed BTC 1m candles"
+          assert all(b["low"] <= b["open"] <= b["high"] for b in bars)
+          PY
+
   review:
     needs: validate
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
