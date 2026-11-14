@@ -65,7 +65,7 @@ jobs:
 
   review:
     needs: validate
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[recover-daily]'))
     runs-on: ubuntu-24.04
     timeout-minutes: 22
     env:
