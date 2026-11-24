@@ -1,23 +1,23 @@
 # OKX USDT永续合约行情快照
 
-北京时间：2026-11-25T04:49:23+08:00
+北京时间：2026-11-25T05:04:15+08:00
 
 行情源：OKX-USDT-SWAP，技术指标仅基于已收盘K线。非直接交易指令。
 
 | 币种 | 最新价 | 24h涨跌 | 15m结构提示 | 15m布林扩张 | 15m量比 |
 |---|---:|---:|---|---|---:|
-| BTCUSDT | 59666.1 | -2.4901% | LH / LL | True | 0.499 |
-| ETHUSDT | 1675.07 | -2.8213% | LH / LL | True | 0.489 |
-| SOLUSDT | 69.28 | -4.8352% | LH / LL | False | 0.245 |
-| XRPUSDT | 0.9207 | -1.8234% | LH / LL | False | 0.315 |
-| LTCUSDT | 40.82 | -0.9944% | HH / LL | False | 0.544 |
-| ADAUSDT | 0.1441 | -2.2388% | HH / LL | False | 0.806 |
-| BCHUSDT | 195.69 | -1.9589% | LH / LL | True | 1.068 |
-| LINKUSDT | 8.838 | -1.3396% | LH / LL | False | 0.587 |
-| DOGEUSDT | 0.05529 | -2.3145% | LH / HL | False | 0.357 |
-| AVAXUSDT | 6.564 | -3.3427% | LH / HL | False | 0.418 |
-| SUIUSDT | 0.6445 | -4.3769% | LH / LL | False | 0.391 |
-| BNBUSDT | 548.42 | -1.6269% | LH / LL | False | 0.305 |
+| BTCUSDT | 59724.4 | -2.4613% | LH / LL | False | 0.824 |
+| ETHUSDT | 1673.46 | -2.927% | LH / LL | False | 1.027 |
+| SOLUSDT | 69.26 | -4.6924% | LH / HL | False | 0.993 |
+| XRPUSDT | 0.9191 | -1.669% | LH / LL | False | 1.911 |
+| LTCUSDT | 40.74 | -1.332% | HH / HL | False | 0.917 |
+| ADAUSDT | 0.1437 | -2.774% | HH / LL | False | 1.647 |
+| BCHUSDT | 195.59 | -2.3076% | LH / LL | False | 0.711 |
+| LINKUSDT | 8.813 | -2.0016% | LH / LL | False | 1.317 |
+| DOGEUSDT | 0.05523 | -2.541% | LH / HL | False | 1.383 |
+| AVAXUSDT | 6.559 | -3.5583% | LH / HL | False | 1.412 |
+| SUIUSDT | 0.644 | -4.4227% | LH / LL | False | 1.124 |
+| BNBUSDT | 548.9 | -1.6061% | LH / LL | False | 1.431 |
 
 注意：OKX价格不能直接当作其他交易所的精确委托价。结构指标为提示，非确认信号。
 
